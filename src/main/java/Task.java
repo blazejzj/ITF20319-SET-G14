@@ -1,6 +1,8 @@
 public class Task {
     // Instance variables
-    private int id = 0;
+    private static int taskAmount = 0; //
+
+    private int taskID;
     private String title;
     private String description;
     private Boolean isDone;
@@ -10,14 +12,14 @@ public class Task {
     public Task(String title, String description, Boolean isDone) {
         this.title = title;
         this.description = description;
-        this.id = id++; // Each task has a unique ID starting from 0
+        this.taskID = taskAmount++; // Each task has a unique ID starting from 0
         this.isDone = false;
         this.repeats = false;
     }
 
     // Getters
 
-    public int getId() {return id;}
+    public int getId() {return taskID;}
     public String getTitle() {return title;}
     public String getDescription() {return description;}
     public Boolean getDone() {return isDone;}

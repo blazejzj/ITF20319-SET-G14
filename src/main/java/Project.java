@@ -3,7 +3,8 @@ import java.util.ArrayList;
 public class Project {
 
     // Instance variables
-    private static int id = 0; // amount of projects
+    private static int projectCounter = 0; // Each project has its own ID starting from 0
+
     private int projectID;
     private String title;
     private String description;
@@ -14,7 +15,7 @@ public class Project {
         this.title = title;
         this.description = description;
         this.tasks = new ArrayList<>();
-        this.projectID = id++; // Each project has a unique id starting from 0
+        this.projectID = projectCounter++; // Each project has a unique id starting from 0
     }
 
     // Getters

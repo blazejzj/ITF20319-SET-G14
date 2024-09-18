@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 public class ProjectTests {
 
     @Test
-    @DisplayName("Each project has a unique ID")
+    @DisplayName("Multipe created projects have their own unique ID")
     public void controlUniqueID() {
         // Arrange
         Project project = new Project("ProjectName", "TestingStuff hello");
@@ -19,6 +19,6 @@ public class ProjectTests {
         System.out.println(idProject2);
         // Assert
         // If the two id's do not match -> Success
-        Assertions.assertEquals(idProject1, idProject2);
+        Assertions.assertNotEquals(idProject1, idProject2);
     }
 }
