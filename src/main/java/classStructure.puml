@@ -1,27 +1,64 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-abstract class AbstractList
-abstract AbstractCollection
-interface List
-interface Collection
-
-List <|-- AbstractList
-Collection <|-- AbstractCollection
-
-Collection <|- List
-AbstractCollection <|- AbstractList
-AbstractList <|-- ArrayList
-
-class ArrayList {
-Object[] elementData
-size()
+Project o-- Task
+Project <-- Task
+class Project {
+    int id
+    String title
+    String description
+    ArrayList<Task> tasks
+    addTask()
+    removeTask()
+    Getters()
+    Setters()
 }
 
-enum TimeUnit {
-DAYS
-HOURS
-MINUTES
+class Task {
+    int id
+    String title
+    String description
+    Date dueDate
+    Boolean isCompleted
+    Boolean repeat
+    toggleComplete()
+    toggleRepeat()
+    Getters()
+    Setters()
+}
+
+' We thought about adding an ArrayList of users
+' which would have "friends" of this user
+' ArrayList<User> friends
+' addFriend()
+' removeFriend()
+User o-- Project
+User <-- Project
+class User {
+    String name
+    ArrayList<Project> projects
+    addProject()
+    removeProject()
+    showProjects()
+    Getters()
+    Setters()
+}
+
+appController o-- Database
+abstract class Database {
+    createDatabase()
+'  -> If no project -> call createDatabase -> make file
+    saveUserData()
+    loadUserData()
+}
+
+appController <-- Project
+Project <-.- appController
+abstract class appController {
+    createNewProject()
+    deleteProject()
+    saveData()
+    getData()
 }
 
 @enduml
