@@ -7,5 +7,9 @@ public class Database {
         this.dbName = dbName;
     }
 
+    public boolean connect() {
+        return true;
+    }
+
 }
 
