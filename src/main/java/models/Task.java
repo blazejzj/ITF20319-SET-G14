@@ -1,3 +1,5 @@
+package models;
+
 public class Task {
     // Instance variables
     private static int taskAmount = 0; //
