@@ -3,6 +3,7 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Database {
 
@@ -17,6 +18,13 @@ public class Database {
 
     public Connection connect() throws SQLException {
         return DriverManager.getConnection(getDbURL());
+    }
+
+    public void createTables() throws SQLException {
+        try (Connection connec = connect(); Statement state = connec.createStatement()) {
+            state.execute("");
+            state.execute("");
+        }
     }
 
 }

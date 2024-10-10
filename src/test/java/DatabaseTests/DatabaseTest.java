@@ -41,7 +41,6 @@ public class DatabaseTest {
 
         database1.createTables(); // create necessary tables
 
-
         verify(mockConnection).createStatement(); // make sure createStatement and Execute were called
         verify(mockStatement, times(2)).execute(anyString());
     }
