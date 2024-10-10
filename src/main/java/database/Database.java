@@ -5,15 +5,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    private String dbName;
+
+    private final String dbName;
+    private final String dbURL = "jdbc:sqlite:";
 
     public Database(String dbName) {
         this.dbName = dbName;
     }
 
+    public String getDbURL() {return dbURL + dbName;}
+
     public Connection connect() throws SQLException {
-        String dbURL = "jdbc:sqlite:" + dbName;
-        return DriverManager.getConnection(dbURL);
+        return DriverManager.getConnection(getDbURL());
     }
 
 }

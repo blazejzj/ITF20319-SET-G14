@@ -15,12 +15,12 @@ public class DatabaseTest {
     Database database = new Database("test.db");
 
     @Test
-    @DisplayName("Test if SQLite db file is created and connection made")
+    @DisplayName("SQLite database file is created and connection made")
     public void testDatabaseConnection() {
         try (Connection connection = database.connect()) {
-            assertNotNull(database.connect(), "Connection method should not be null");
+            assertNotNull(connection);
         } catch (SQLException e) {
-            e.printStackTrace();
+            fail("Database connection failed!" + e.getMessage());
         }
     }
 
