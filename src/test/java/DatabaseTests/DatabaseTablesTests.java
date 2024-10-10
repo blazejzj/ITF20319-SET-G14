@@ -39,7 +39,7 @@ public class DatabaseTablesTests {
         database.createTables();
 
         verify(mockConnection).createStatement();
-        verify(mockStatement, times(2)).execute(anyString());
+        verify(mockStatement, times(3)).execute(anyString());
     }
 
     @Test
@@ -79,9 +79,10 @@ public class DatabaseTablesTests {
 
         // veruify the columns are there
         verify(mockStatement).execute(
-                "CREATE TABLE IF NOT EXISTS Users" +
-                    "(id INTEGER PRIMARY KEY, " +
-                    "name VARCHAR(45), "
+            "CREATE TABLE IF NOT EXISTS Users (" +
+                    "id INTEGER PRIMARY KEY, " +
+                    "name VARCHAR(45))"
         );
+
     }
 }

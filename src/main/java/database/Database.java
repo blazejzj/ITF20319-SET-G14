@@ -25,6 +25,11 @@ public class Database {
                     "project_id INTEGER, " +
                     "FOREIGN KEY (project_id) REFERENCES Projects(id))";
 
+    private static final String CREATE_USERS_TABLE =
+            "CREATE TABLE IF NOT EXISTS Users (" +
+                    "id INTEGER PRIMARY KEY, " +
+                    "name VARCHAR(45))";
+
 
     public Database(String dbName) {
         this.dbName = dbName;
@@ -40,6 +45,7 @@ public class Database {
         try (Connection connection = connect(); Statement statement = connection.createStatement()) {
             statement.execute(CREATE_PROJECTS_TABLE);
             statement.execute(CREATE_TASKS_TABLE);
+            statement.execute(CREATE_USERS_TABLE);
         }
     }
 
