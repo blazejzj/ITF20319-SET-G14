@@ -12,7 +12,7 @@ public class Database {
 
     // sql queries
     private static final String CREATE_PROJECTS_TABLE = "CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY, title TEXT, description TEXT)";
-    private static final String CREATE_TASKS_TABLE = "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY, title TEXT)";
+    private static final String CREATE_TASKS_TABLE = "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT, project_id INTEGER, FOREIGN KEY (project_id) REFERENCES Projects(id))";
 
     public Database(String dbName) {
         this.dbName = dbName;
