@@ -22,6 +22,9 @@ public class Database {
                     "id INTEGER PRIMARY KEY, " +
                     "title VARCHAR(45), " +
                     "description TEXT, " +
+                    "dueDate DATE, " +
+                    "isFinished INTEGER, " +
+                    "isRepeating INTEGER, " +
                     "project_id INTEGER, " +
                     "FOREIGN KEY (project_id) REFERENCES Projects(id))";
 
