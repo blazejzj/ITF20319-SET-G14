@@ -15,16 +15,18 @@ public class Database {
             "CREATE TABLE IF NOT EXISTS Projects (" +
                     "id INTEGER PRIMARY KEY, " +
                     "title VARCHAR(45), " +
-                    "description TEXT)";
+                    "description TEXT, " +
+                    "userID INTEGER, " +
+                    "FOREIGN KEY (userID) REFERENCES Users(id))";
 
     private static final String CREATE_TASKS_TABLE =
             "CREATE TABLE IF NOT EXISTS Tasks (" +
                     "id INTEGER PRIMARY KEY, " +
                     "title VARCHAR(45), " +
                     "description TEXT, " +
-                    "dueDate DATE, " +
-                    "isFinished INTEGER, " +
-                    "isRepeating INTEGER, " +
+                    "dueDate DATE, " + // Stored in format (sqlite) yyyy-mm-dd
+                    "isFinished INTEGER, " + // "boolean" value 0, og 1 for false, true
+                    "isRepeating INTEGER, " + // stored in days (1 -> 1 day, 7 -> week)
                     "project_id INTEGER, " +
                     "FOREIGN KEY (project_id) REFERENCES Projects(id))";
 

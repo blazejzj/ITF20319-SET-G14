@@ -52,7 +52,9 @@ public class DatabaseTablesTests {
             "CREATE TABLE IF NOT EXISTS Projects (" +
                     "id INTEGER PRIMARY KEY, " +
                     "title VARCHAR(45), " +
-                    "description TEXT)"
+                    "description TEXT, " +
+                    "userID INTEGER, " +
+                    "FOREIGN KEY (userID) REFERENCES Users(id))"
         );
     }
 
@@ -86,6 +88,5 @@ public class DatabaseTablesTests {
                     "id INTEGER PRIMARY KEY, " +
                     "name VARCHAR(45))"
         );
-
     }
 }
