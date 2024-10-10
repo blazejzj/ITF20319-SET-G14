@@ -11,7 +11,7 @@ public class Database {
     private final String dbURL = "jdbc:sqlite:";
 
     // sql queries
-    private static final String CREATE_PROJECTS_TABLE = "CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY, title TEXT)";
+    private static final String CREATE_PROJECTS_TABLE = "CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY, title TEXT, description TEXT)";
     private static final String CREATE_TASKS_TABLE = "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY, title TEXT)";
 
     public Database(String dbName) {
