@@ -63,12 +63,15 @@ public class DatabaseTablesTests {
 
         // verify the columns are there
         verify(mockStatement).execute(
-            "CREATE TABLE IF NOT EXISTS Tasks (" +
-                    "id INTEGER PRIMARY KEY, " +
-                    "title VARCHAR(45), " +
-                    "description TEXT, " +
-                    "project_id INTEGER, " +
-                    "FOREIGN KEY (project_id) REFERENCES Projects(id))"
+                "CREATE TABLE IF NOT EXISTS Tasks (" +
+                        "id INTEGER PRIMARY KEY, " +
+                        "title VARCHAR(45), " +
+                        "description TEXT, " +
+                        "dueDate DATE, " +
+                        "isFinished INTEGER, " +
+                        "isRepeating INTEGER, " +
+                        "project_id INTEGER, " +
+                        "FOREIGN KEY (project_id) REFERENCES Projects(id))"
         );
     }
 
