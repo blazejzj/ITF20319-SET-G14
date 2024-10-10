@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class Database {
 
@@ -11,15 +12,14 @@ public class Database {
     private final String dbURL = "jdbc:sqlite:";
 
     // sql queries
-    private static final String CREATE_PROJECTS_TABLE =
+    private static final List<String> CREATE_TABLE_STATEMENTS = List.of(
             "CREATE TABLE IF NOT EXISTS Projects (" +
                     "id INTEGER PRIMARY KEY, " +
                     "title VARCHAR(45), " +
                     "description TEXT, " +
                     "userID INTEGER, " +
-                    "FOREIGN KEY (userID) REFERENCES Users(id))";
+                    "FOREIGN KEY (userID) REFERENCES Users(id))",
 
-    private static final String CREATE_TASKS_TABLE =
             "CREATE TABLE IF NOT EXISTS Tasks (" +
                     "id INTEGER PRIMARY KEY, " +
                     "title VARCHAR(45), " +
@@ -28,12 +28,12 @@ public class Database {
                     "isFinished INTEGER, " + // "boolean" value 0, og 1 for false, true
                     "isRepeating INTEGER, " + // stored in days (1 -> 1 day, 7 -> week)
                     "project_id INTEGER, " +
-                    "FOREIGN KEY (project_id) REFERENCES Projects(id))";
+                    "FOREIGN KEY (project_id) REFERENCES Projects(id))",
 
-    private static final String CREATE_USERS_TABLE =
             "CREATE TABLE IF NOT EXISTS Users (" +
                     "id INTEGER PRIMARY KEY, " +
-                    "name VARCHAR(45))";
+                    "name VARCHAR(45))"
+    );
 
 
     public Database(String dbName) {
@@ -48,9 +48,9 @@ public class Database {
 
     public void createTables() throws SQLException {
         try (Connection connection = connect(); Statement statement = connection.createStatement()) {
-            statement.execute(CREATE_PROJECTS_TABLE);
-            statement.execute(CREATE_TASKS_TABLE);
-            statement.execute(CREATE_USERS_TABLE);
+            for (String sqlQuery : CREATE_TABLE_STATEMENTS) {
+                statement.execute(sqlQuery);
+            }
         }
     }
 
