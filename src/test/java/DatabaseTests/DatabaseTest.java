@@ -46,4 +46,25 @@ public class DatabaseTest {
         verify(mockStatement, times(2)).execute(anyString());
     }
 
+    @Test
+    @DisplayName("Make sure Projects have the necessary columns")
+    public void testProjectColumns() throws SQLException {
+        // mock the connection and statemnt objects from SQL
+        Connection mockConnection = mock(Connection.class);
+        Statement mockStatement = mock(Statement.class);
+
+        // mock the connnection
+        when(mockConnection.createStatement()).thenReturn(mockStatement);
+
+        // override connect to return mock connect
+        doReturn(mockConnection).when(database).connect();
+
+        database.createTables(); // create necessary tables
+
+        verify(mockConnection).createStatement(); // make sure createStatement and Execute were called
+
+        // verify the columns are there
+        verify(mockStatement).execute("CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY, title TEXT, description TEXT)");
+    }
+
 }
