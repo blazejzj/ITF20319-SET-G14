@@ -34,7 +34,7 @@ public class DatabaseTablesTests {
     }
 
     @Test
-    @DisplayName("Project table is created if it does not exist")
+    @DisplayName("Tables (Projects, User, Tasks) are created if not already")
     public void testCreateTablesExecutesSQL() throws SQLException {
         database.createTables();
 
@@ -43,20 +43,45 @@ public class DatabaseTablesTests {
     }
 
     @Test
-    @DisplayName("Make sure Projects table has all the necessary columns")
+    @DisplayName("Projects table has all the necessary columns")
     public void testProjectTableAllColumnsExist() throws SQLException {
         database.createTables();
 
         // verify the columns are there
-        verify(mockStatement).execute("CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY, title TEXT, description TEXT)");
+        verify(mockStatement).execute(
+            "CREATE TABLE IF NOT EXISTS Projects (" +
+                    "id INTEGER PRIMARY KEY, " +
+                    "title VARCHAR(45), " +
+                    "description TEXT)"
+        );
     }
 
     @Test
-    @DisplayName("Make sure Tasks table has all the necessary columns")
+    @DisplayName("Tasks table has all the necessary columns")
     public void testTasksTableAllColumnsExist() throws SQLException {
         database.createTables();
 
         // verify the columns are there
-        verify(mockStatement).execute("CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY, title TEXT, description TEXT, project_id INTEGER, FOREIGN KEY (project_id) REFERENCES Projects(id))");
+        verify(mockStatement).execute(
+            "CREATE TABLE IF NOT EXISTS Tasks (" +
+                    "id INTEGER PRIMARY KEY, " +
+                    "title VARCHAR(45), " +
+                    "description TEXT, " +
+                    "project_id INTEGER, " +
+                    "FOREIGN KEY (project_id) REFERENCES Projects(id))"
+        );
+    }
+
+    @Test
+    @DisplayName("User table has all the necessary columns")
+    public void testUserTableAllColumnsExist() throws SQLException {
+        database.createTables();
+
+        // veruify the columns are there
+        verify(mockStatement).execute(
+                "CREATE TABLE IF NOT EXISTS Users" +
+                    "(id INTEGER PRIMARY KEY, " +
+                    "name VARCHAR(45), "
+        );
     }
 }
