@@ -9,7 +9,7 @@ public class Database {
     private final String dbName;
     private final String dbURL = "jdbc:sqlite:";
 
-    // sql queries
+    // sql queries for table creation
     private static final List<String> CREATE_TABLE_STATEMENTS = List.of(
             "CREATE TABLE IF NOT EXISTS Projects (" +
                     "id INTEGER PRIMARY KEY, " +
@@ -32,6 +32,9 @@ public class Database {
                     "id INTEGER PRIMARY KEY, " +
                     "name VARCHAR(45))"
     );
+
+    // sql queries
+    private static final String INSERT_USER_QUERY = "INSERT INTO Users (name) VALUES (?)";
 
 
     // Constructor/s
@@ -57,14 +60,14 @@ public class Database {
     }
 
     public int saveUser(String name) throws SQLException {
-        String query = "INSERT INTO Users (name) VALUES (?)";
-        try (Connection connection = connect();
-            PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connect()
+                .prepareStatement("INSERT INTO Users (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
             return 1;
         }
     }
+
 
 }
 
