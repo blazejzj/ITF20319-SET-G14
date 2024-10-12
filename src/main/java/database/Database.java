@@ -1,13 +1,11 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 public class Database {
 
+    // Variables
     private final String dbName;
     private final String dbURL = "jdbc:sqlite:";
 
@@ -36,12 +34,16 @@ public class Database {
     );
 
 
+    // Constructor/s
     public Database(String dbName) {
         this.dbName = dbName;
     }
 
+    // Getters/Setters
     public String getDbURL() {return dbURL + dbName;}
 
+
+    // Methods
     public Connection connect() throws SQLException {
         return DriverManager.getConnection(getDbURL());
     }
@@ -51,6 +53,16 @@ public class Database {
             for (String sqlQuery : CREATE_TABLE_STATEMENTS) {
                 statement.execute(sqlQuery);
             }
+        }
+    }
+
+    public int saveUser(String name) throws SQLException {
+        String query = "INSERT INTO Users (name) VALUES (?)";
+        try (Connection connection = connect();
+            PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+            return 1;
         }
     }
 
