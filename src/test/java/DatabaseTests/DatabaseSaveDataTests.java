@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 public class DatabaseSaveDataTests {
@@ -50,6 +53,30 @@ public class DatabaseSaveDataTests {
         );
         verify(mockPreparedStatement).setString(1, "Blazej");
         verify(mockPreparedStatement).executeUpdate();
+    }
 
+    @Test
+    @DisplayName("Saved user returns newly generated ID")
+    public void testSaveUserReturnsNewlyGeneratedId() throws SQLException {
+        // arrange -> set up mock to return genereted ID
+        ResultSet mockResultSet1 = mock(ResultSet.class);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet1);
+        when(mockResultSet1.next()).thenReturn(true); // for time being simulate that there is indeed a result
+        when(mockResultSet1.getInt(1)).thenReturn(1); // then mock returns 1 as the generated ID
+
+        // act -> call saveUser and get the id
+        int userID = database.saveUser("Blazej");
+
+        // arrange again
+        ResultSet mockResultSet2 = mock(ResultSet.class);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet2);
+        when(mockResultSet2.next()).thenReturn(true); // Simulate that there's a generated key
+        when(mockResultSet2.getInt(1)).thenReturn(2); // Second user has ID 2
+
+        // act 2
+        int userID2 = database.saveUser("Kamilla");
+
+        // assert -> Veerify the ids are indeed inque -> not equals
+        assertNotEquals(userID, userID2);
     }
 }
