@@ -19,6 +19,13 @@ public class DatabaseSaveDataTests {
     Connection mockConnection;
     PreparedStatement mockPreparedStatement;
 
+    private ResultSet createMockResultSetForGeneratedKeys(int generatedId) throws SQLException {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt(1)).thenReturn(generatedId);
+        return mockResultSet;
+    }
+
     @BeforeEach
     public void setUp() throws SQLException {
 
@@ -41,19 +48,13 @@ public class DatabaseSaveDataTests {
     }
 
     @Test
-    @DisplayName("Save an user -> Insert a new row into User table")
+    @DisplayName("Save an user / Insert a new row into User table")
     public void testSaveUserIntoDatabase() throws SQLException {
-
-        // arrange
-        ResultSet mockResultSet = mock(ResultSet.class);
+        ResultSet mockResultSet = createMockResultSetForGeneratedKeys(1);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(1);
 
-        // act
         database.saveUser("Blazej");
 
-        //assert
         verify(mockConnection).prepareStatement(
                 "INSERT INTO Users (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS
         );
@@ -64,27 +65,16 @@ public class DatabaseSaveDataTests {
     @Test
     @DisplayName("Saved user returns newly generated ID")
     public void testSaveUserReturnsNewlyGeneratedId() throws SQLException {
-        // arrange -> set up mock to return genereted ID
-        ResultSet mockResultSet1 = mock(ResultSet.class);
-        ResultSet mockResultSet2 = mock(ResultSet.class);
+        ResultSet mockResultSet1 = createMockResultSetForGeneratedKeys(1);
+        ResultSet mockResultSet2 = createMockResultSetForGeneratedKeys(2);
 
-        // first call to return mockResultSet1 and the 2 to return mockResultset2
         when(mockPreparedStatement.getGeneratedKeys())
                 .thenReturn(mockResultSet1)
                 .thenReturn(mockResultSet2);
 
-        when(mockResultSet1.next()).thenReturn(true);
-        when(mockResultSet1.getInt(1)).thenReturn(1);
-
-        when(mockResultSet2.next()).thenReturn(true);
-        when(mockResultSet2.getInt(1)).thenReturn(2);
-
-        // act -> save users
         int userID1 = database.saveUser("Blazej");
         int userID2 = database.saveUser("Kamilla");
 
-        // assert -> Veerify the ids are indeed inque -> not equals
         assertNotEquals(userID1, userID2);
-
     }
 }

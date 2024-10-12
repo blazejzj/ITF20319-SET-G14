@@ -61,18 +61,19 @@ public class Database {
 
     public int saveUser(String name) throws SQLException {
         try (PreparedStatement preparedStatement = connect()
-                .prepareStatement("INSERT INTO Users (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+                .prepareStatement(INSERT_USER_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
+            return getGeneratedKey(preparedStatement);
+        }
+    }
 
-            // retrieve generated ids
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1); // returns the actual key -> takes columnIndex as param
-                }
-                else {
-                    throw new SQLException("Somethings went wrong. Cant generate user ID -> no id returned");
-                }
+    public int getGeneratedKey(PreparedStatement preparedStatement) throws SQLException {
+        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Somethings went wrong. Cant generate user ID -> no id returned");
             }
         }
     }
