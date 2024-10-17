@@ -1,6 +1,9 @@
 package database;
 
+import models.Project;
+
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
@@ -102,6 +105,30 @@ public class Database {
             preparedStatement.executeUpdate();
             return getGeneratedKey(preparedStatement);
         }
+    }
+
+    public ArrayList<Project> getUserProjects(int userId) throws SQLException {
+        String query = "SELECT * FROM Projects WHERE userID = ?";
+
+        ArrayList<Project> projects = new ArrayList<>(); // temp list to store projetcs
+
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String description = resultSet.getString("description");
+                int userID = resultSet.getInt("userID");
+
+                Project project = new Project(id, title, description, userID);
+                projects.add(project);
+            }
+        }
+        return projects;
     }
 }
 

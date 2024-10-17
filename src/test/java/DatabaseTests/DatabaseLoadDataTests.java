@@ -67,5 +67,15 @@ public class DatabaseLoadDataTests {
 
         assertNull(null, userName);
     }
+
+    @Test
+    @DisplayName("Read existing project from Database")
+    public void testLoadUsersExistingProjects() throws SQLException {
+
+    }
+
+    @Test
+    @DisplayName("Read non-existing project from Database")
+    public void testLoadUsersNonExistingProjects() throws SQLException {}
 }
 
