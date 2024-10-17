@@ -15,9 +15,9 @@ import static org.mockito.Mockito.*;
 
 public class DatabaseSaveDataTests {
 
-    Database database;
-    Connection mockConnection;
-    PreparedStatement mockPreparedStatement;
+    private Database database;
+    private Connection mockConnection;
+    private PreparedStatement mockPreparedStatement;
 
     private ResultSet createMockResultSetForGeneratedKeys(int generatedId) throws SQLException {
         ResultSet mockResultSet = mock(ResultSet.class);

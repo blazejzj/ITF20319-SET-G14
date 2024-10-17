@@ -78,6 +78,8 @@ public class Database {
         }
     }
 
-
+    public String loadUser(int userId) {
+        return "x";
+    }
 }
 
