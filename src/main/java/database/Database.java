@@ -1,10 +1,13 @@
 package database;
 
 import models.Project;
+import models.Task;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.time.*;
 
 public class Database {
 
@@ -99,36 +102,73 @@ public class Database {
         String query = "INSERT INTO Projects (title, description, userID) VALUES (?, ?, ?)";
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, title);
-            preparedStatement.setString(2, description);
-            preparedStatement.setInt(3, userId);
-            preparedStatement.executeUpdate();
-            return getGeneratedKey(preparedStatement);
+                preparedStatement.setString(1, title);
+                preparedStatement.setString(2, description);
+                preparedStatement.setInt(3, userId);
+                preparedStatement.executeUpdate();
+                return getGeneratedKey(preparedStatement);
         }
     }
 
     public ArrayList<Project> getUserProjects(int userId) throws SQLException {
         String query = "SELECT * FROM Projects WHERE userID = ?";
-
         ArrayList<Project> projects = new ArrayList<>(); // temp list to store projetcs
 
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+                preparedStatement.setInt(1, userId);
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String title = resultSet.getString("title");
-                String description = resultSet.getString("description");
-                int userID = resultSet.getInt("userID");
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String title = resultSet.getString("title");
+                    String description = resultSet.getString("description");
+                    int userID = resultSet.getInt("userID");
 
-                Project project = new Project(id, title, description, userID);
-                projects.add(project);
-            }
+                    Project project = new Project(id, title, description, userID);
+                    projects.add(project);
+                }
         }
         return projects;
+    }
+
+    public int saveTask(String title, String description, Date dueDate, int isFinished, int projectId) throws SQLException {
+        String query = "INSERT INTO Tasks (title, description, dueDate, isFinished, project_id) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, description);
+            preparedStatement.setDate(3, new java.sql.Date(dueDate.getTime()));
+            preparedStatement.setInt(4, isFinished);
+            preparedStatement.setInt(5, projectId);
+            preparedStatement.executeUpdate();
+            return getGeneratedKey(preparedStatement);
+        }
+    }
+
+    public ArrayList<Task> getAllProjectTasks (int projectId) throws SQLException {
+        String query  = "SELECT * FROM Tasks WHERE project_id = ?"; // based on project id get all the tasks
+        ArrayList<Task> tasks = new ArrayList<>(); // temp list to store tasks
+
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                 preparedStatement.setInt(1, projectId);
+                 ResultSet resultSet = preparedStatement.executeQuery();
+
+                 while (resultSet.next()) {
+                     int id = resultSet.getInt("id");
+                     String title = resultSet.getString("title");
+                     String description = resultSet.getString("description");
+                     Date dueDate = resultSet.getDate("dueDate");
+                     int isFinished = resultSet.getInt("isFinished");
+                     int isRepeating = resultSet.getInt("isRepeating");
+
+                     Task newTask = new Task(id, title, description, dueDate, isFinished, isRepeating);
+                     tasks.add(newTask);
+                 }
+        }
+        return tasks;
     }
 }
 
