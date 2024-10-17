@@ -1,39 +1,84 @@
 package models;
+import java.time.LocalDate;
 
 public class Task {
-    // Instance variables
-    private static int taskAmount = 0; //
+    private static int taskAmount = 0;
 
     private int taskID;
     private String title;
     private String description;
-    private Boolean isDone;
-    private Boolean repeats;
+    private int isDone;
+    private int repeats;
+    private LocalDate dueDate;
+    private int repeatDays;
 
-    // Constructor
-    public Task(String title, String description, Boolean isDone) {
+
+    public Task(String title, String description, LocalDate dueDate, int isDone, int repeats, int repeatDays) {
         this.title = title;
         this.description = description;
-        this.taskID = taskAmount++; // Each task has a unique ID starting from 0
-        this.isDone = false;
-        this.repeats = false;
+        this.dueDate = dueDate;
+        this.isDone = isDone;
+        this.repeats = repeats;
+        this.repeatDays = repeats != 0 ? repeatDays : 0;
     }
 
-    // Getters
+
+    public Task(int id, String title, String description, LocalDate dueDate, int isDone, int repeats, int repeatDays) {
+        this.taskID = id;
+        this.title = title;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.isDone = isDone;
+        this.repeats = repeats;
+        this.repeatDays = repeats != 0 ? repeatDays : 0;
+    }
+
 
     public int getId() {return taskID;}
     public String getTitle() {return title;}
     public String getDescription() {return description;}
-    public Boolean getDone() {return isDone;}
-    public Boolean getRepeats() {return repeats;}
+    public int getIsDone() {return isDone;}
+    public int getRepeats() {return repeats;}
+    public LocalDate getDueDate() {return dueDate;}
 
-    // Setters
-    public void setTitle(String title) {this.title = title;}
-    public void setDescription(String description) {this.description = description;}
-    public void setDone(Boolean isDone) {this.isDone = isDone;}
-    public void setRepeats(Boolean repeats) {this.repeats = repeats;}
+    public void setTitle(String title) { this.title = title; }
+    public void setDescription(String description) { this.description = description; }
+    public void setIsDone(int isDone) { this.isDone = isDone; }
+    public void setRepeats(int repeats) {
+        this.repeats = repeats;
+        this.repeatDays = repeats != 0 ? repeatDays : 0;
+    }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
 
-    // Methods
-    public void toggleDone() {this.isDone = !isDone;}
-    public void toggleRepeats() {this.repeats = !repeats;}
+
+    private void updateDueDate() {
+        if (this.repeats != 0 && this.repeatDays > 0) {
+            this.dueDate = this.dueDate.plusDays(repeatDays);
+            this.isDone = 0;
+        }
+    }
+
+
+    public void toggleDone() {
+        if (this.isDone != 0) {
+            this.isDone = 0;
+        } else {
+            this.isDone = 1;
+            if (this.repeats != 0) {
+                updateDueDate();
+            }
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        return "Gjoeremaal\n" +
+                "ID: " + taskID + "\n" +
+                "Title: " + title + "\n" +
+                "Description: " + description + "\n" +
+                "Is Done: " + (isDone != 0 ? "Yes" : "No") + "\n" +
+                "Repeats: " + (repeats != 0 ? "Yes, every " + repeatDays + " days" : "No") + "\n" +
+                "Due Date: " + dueDate + "\n";
+    }
 }
