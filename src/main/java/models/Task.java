@@ -64,9 +64,6 @@ public class Task {
             this.isDone = 0;
         } else {
             this.isDone = 1;
-            if (this.repeats != 0) {
-                updateDueDate();
-            }
         }
     }
 
