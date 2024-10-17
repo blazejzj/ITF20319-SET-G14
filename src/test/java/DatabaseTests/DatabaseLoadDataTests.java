@@ -31,6 +31,7 @@ public class DatabaseLoadDataTests {
         // Mock connection and prepared statementss
         mockConnection = mock(Connection.class);
         mockPreparedStatement = mock(PreparedStatement.class);
+        mockResultSet = mock(ResultSet.class);
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);

@@ -78,8 +78,18 @@ public class Database {
         }
     }
 
-    public String loadUser(int userId) {
-        return "x";
+    public String loadUser(int userId) throws SQLException {
+        String query = "SELECT name FROM Users WHERE id = ?";
+
+        try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("name"); // get the name by id
+            } else { return null; } // if no user with "userId" exists return null
+        }
+
     }
 }
 
