@@ -91,5 +91,9 @@ public class Database {
         }
 
     }
+
+    public int saveProject(String projectTitle, String projectDescription, int userId) throws SQLException {
+        return 1;
+    }
 }
 

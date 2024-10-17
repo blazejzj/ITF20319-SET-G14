@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
@@ -76,5 +77,25 @@ public class DatabaseSaveDataTests {
         int userID2 = database.saveUser("Kamilla");
 
         assertNotEquals(userID1, userID2);
+    }
+
+    @Test
+    @DisplayName("Save a project into the database")
+    public void testSaveProject() throws  SQLException {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt(1)).thenReturn(1);
+
+        // id automatically generates, hence we make a project assigning an id
+        // 1arg = title, 2arg = description, 3arg = userid holding the project
+        int projectId = database.saveProject("ProjectName", "ProjectDescription", 1);
+
+        verify(mockPreparedStatement).setString(1, "ProjectName");
+        verify(mockPreparedStatement).setString(2, "ProjectDescription");
+        verify(mockPreparedStatement).setInt(3, 1);
+        verify(mockPreparedStatement).executeUpdate();
+
+        assertEquals(1, projectId);
     }
 }

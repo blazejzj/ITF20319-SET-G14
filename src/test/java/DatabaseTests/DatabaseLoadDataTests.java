@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doReturn;
@@ -52,6 +53,19 @@ public class DatabaseLoadDataTests {
         verify(mockPreparedStatement).setInt(1, userId);
 
         assertEquals("Blazej", userName);
+    }
+
+    @Test
+    @DisplayName("Read non-existing user from Database")
+    public void testLoadNonExistingUser() throws SQLException {
+        when(mockResultSet.next()).thenReturn(false);
+
+        int userId = 999;
+        String userName = database.loadUser(userId);
+
+        verify(mockPreparedStatement).setInt(1, userId);
+
+        assertNull(null, userName);
     }
 }
 
