@@ -73,7 +73,7 @@ public class Database {
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
             } else {
-                throw new SQLException("Somethings went wrong. Cant generate user ID -> no id returned");
+                throw new SQLException("Somethings went wrong. Can't generate unique ID");
             }
         }
     }
@@ -92,8 +92,16 @@ public class Database {
 
     }
 
-    public int saveProject(String projectTitle, String projectDescription, int userId) throws SQLException {
-        return 1;
+    public int saveProject(String title, String description, int userId) throws SQLException {
+        String query = "INSERT INTO Projects (title, description, userID) VALUES (?, ?, ?)";
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, description);
+            preparedStatement.setInt(3, userId);
+            preparedStatement.executeUpdate();
+            return getGeneratedKey(preparedStatement);
+        }
     }
 }
 
