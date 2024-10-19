@@ -72,11 +72,12 @@ public class DatabaseTablesTests {
                         "dueDate DATE, " +
                         "isFinished INTEGER, " +
                         "isRepeating INTEGER, " +
+                        "repeatDays INTEGER, " + // every x amount of days the task is going to be repeating
                         "project_id INTEGER, " +
                         "FOREIGN KEY (project_id) REFERENCES Projects(id))"
         );
     }
-
+    
     @Test
     @DisplayName("User table has all the necessary columns")
     public void testUserTableAllColumnsExist() throws SQLException {
