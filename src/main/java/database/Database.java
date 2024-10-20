@@ -115,10 +115,42 @@ public class Database {
         }
     }
 
-    public void deleteUser(int userId) throws SQLException {}
+    public void deleteUser(int userId) throws SQLException {
+        // The deletion of a certain user is much more complicated than probably
+        // anticipated because we have to delete Tasks, Projects, and then the user itself.
+
+        // define the queries
+        String deleteUserQuery = "DELETE FROM Users WHERE id = ?";
+        String deleteProjectsQuery = "DELETE FROM Projects WHERE userID = ?";
+        String deleteTasksQuery = "DELETE FROM Tasks WHERE project_id IN (SELECT id FROM Projects WHERE userID = ?)";
+
+        try (Connection connection = connect()) {
+
+            // DELETE TASKS
+            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(deleteTasksQuery)) {
+                deleteTasksStatement.setInt(1, userId);
+                deleteTasksStatement.executeUpdate();
+            }
+
+            // DELETE PROJECTS
+            try (PreparedStatement deleteProjectsStatement = connection.prepareStatement(deleteProjectsQuery)) {
+                deleteProjectsStatement.setInt(1, userId);
+                deleteProjectsStatement.executeUpdate();
+            }
+
+            // DELETE USER
+            try (PreparedStatement deleteUsersStatement = connection.prepareStatement(deleteUserQuery)) {
+                deleteUsersStatement.setInt(1, userId);
+                int affectedRows = deleteUsersStatement.executeUpdate();
+                if(affectedRows == 0) {
+                    throw new SQLException("No rows affected");
+                }
+            }
+        }
+
+    }
 
     // PROJECT METHODS
-
     public int saveProject(String title, String description, int userId) throws SQLException {
         String query = "INSERT INTO Projects (title, description, userID) VALUES (?, ?, ?)";
         try (Connection connection = connect();
