@@ -52,6 +52,7 @@ public class DatabaseDeleteDataTests {
         doReturn(mockConnection).when(database).connect();
     }
 
+    // USER DELETION TESTS
     @Test
     @DisplayName("Delete an existing User")
     public void testDeleteExistingUser() throws SQLException {
@@ -91,9 +92,10 @@ public class DatabaseDeleteDataTests {
     }
 
 
+    // PROJECT DELETION TESTS
     @Test
     @DisplayName("Delete an existing project from the database and its tasks")
-    public void testDeleteExistingProjectAndTasks() throws SQLException {
+    public void testDeleteExistingProjectAndItsTasks() throws SQLException {
         // assume id projetc
         int id = 1;
 
@@ -114,6 +116,24 @@ public class DatabaseDeleteDataTests {
     }
 
     @Test
+    @DisplayName("Attempt to delete a non-existing Project")
+    public void testDeleteNonExistingProject() throws SQLException {
+        int projectId = 999;
+
+        when(mockDeleteProjectStmt.executeUpdate()).thenReturn(0);
+
+        assertThrows(SQLException.class, () -> database.deleteProject(projectId));
+
+        verify(mockDeleteTasksStmt).setInt(1, projectId);
+        verify(mockDeleteTasksStmt).executeUpdate();
+
+        verify(mockDeleteProjectStmt).setInt(1, projectId);
+        verify(mockDeleteProjectStmt).executeUpdate();
+    }
+
+
+    // TASK DELETION TESTS
+    @Test
     @DisplayName("Delete an existing task from database")
     public void testDeleteExistingTask() throws SQLException {
         int id = 1;
@@ -127,5 +147,20 @@ public class DatabaseDeleteDataTests {
         verify(mockDeleteTaskStmt).setInt(1, id);
         verify(mockDeleteTaskStmt).executeUpdate();
     }
+
+    @Test
+    @DisplayName("Attempt to delete a non-existing Task")
+    public void testDeleteNonExistingTask() throws SQLException {
+        int taskId = 999;
+
+        when(mockDeleteTaskStmt.executeUpdate()).thenReturn(0);
+
+        assertThrows(SQLException.class, () -> database.deleteTask(taskId));
+
+        verify(mockDeleteTaskStmt).setInt(1, taskId);
+        verify(mockDeleteTaskStmt).executeUpdate();
+    }
+
+
 
 }
