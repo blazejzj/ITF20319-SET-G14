@@ -3,6 +3,7 @@ package DatabaseTests;
 import database.Database;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Spy;
 
 import java.sql.Connection;
 import java.sql.SQLException;

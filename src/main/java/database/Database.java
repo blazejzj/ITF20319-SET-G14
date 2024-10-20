@@ -5,7 +5,6 @@ import models.Task;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.time.*;
 
@@ -135,7 +134,7 @@ public class Database {
     }
 
     public int saveTask(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays, int projectId) throws SQLException {
-        String query = "INSERT INTO Tasks (title, description, dueDate, isFinished, repeatDays, project_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Tasks (title, description, dueDate, isFinished, isRepeating, repeatDays, project_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = connect();
              PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, title);
@@ -168,7 +167,7 @@ public class Database {
                      int isRepeating = resultSet.getInt("isRepeating");
                      int repeatDays = resultSet.getInt("repeatDays");
 
-                     Task newTask = new Task(id, title, description, dueDate, isFinished, isRepeating);
+                     Task newTask = new Task(id, title, description, dueDate, isFinished, isRepeating, repeatDays);
                      tasks.add(newTask);
                  }
         }

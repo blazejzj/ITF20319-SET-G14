@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -104,26 +103,26 @@ public class DatabaseSaveDataTests {
     @Test
     @DisplayName("Save a task into the database")
     public void testSaveTask() throws SQLException {
-        ResultSet mockResultSet = mock(ResultSet.class);
-        LocalDate mockLocalDate = mock(LocalDate.class);
-
+        ResultSet mockResultSet = createMockResultSetForGeneratedKeys(1);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(1);
+
+        LocalDate mockLocalDate = mock(LocalDate.class);
 
         // id automatically generates, hence we make a task assigning an id
         // 1arg = title, 2arg = description, 3arg = dueDate, 4arg = isFinished, 5arg = projectId
         int taskId = database.saveTask("TaskName", "TaskDescription", mockLocalDate, 0, 1, 7, 1);
 
+        verify(mockPreparedStatement).setString(1, "TaskName");
         verify(mockPreparedStatement).setString(2, "TaskDescription");
         verify(mockPreparedStatement).setDate(3, java.sql.Date.valueOf(mockLocalDate));
         verify(mockPreparedStatement).setInt(4, 0); // isFinished status
-        verify(mockPreparedStatement).setInt(5, 1);
-        verify(mockPreparedStatement).setInt(6, 7);
+        verify(mockPreparedStatement).setInt(5, 1); // isRepeating
+        verify(mockPreparedStatement).setInt(6, 7); // repeatDays
         verify(mockPreparedStatement).setInt(7, 1); // projectId
         verify(mockPreparedStatement).executeUpdate();
 
         assertEquals(1, taskId);
     }
+
 
 }

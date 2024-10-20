@@ -65,17 +65,45 @@ public class DatabaseLoadDataTests {
 
         verify(mockPreparedStatement).setInt(1, userId);
 
-        assertNull(null, userName);
+        assertNull(userName);
     }
 
     @Test
-    @DisplayName("Read existing project from Database")
+    @DisplayName("Read existing projects for a user from Database")
     public void testLoadUsersExistingProjects() throws SQLException {
+        when(mockResultSet.next()).thenReturn(true, true, false); // first, second project, then no more
 
+        when(mockResultSet.getInt("id")).thenReturn(1).thenReturn(2); // First return 1, then 2 for the second project
+        when(mockResultSet.getString("title")).thenReturn("Project 1").thenReturn("Project 2");
+        when(mockResultSet.getString("description")).thenReturn("Description 1").thenReturn("Description 2");
+        when(mockResultSet.getInt("userID")).thenReturn(1); // Same user ID for both projects
+
+        int userId = 1;
+        var projects = database.getUserProjects(userId);
+
+        verify(mockPreparedStatement).setInt(1, userId);
+
+        assertEquals(2, projects.size());
+        assertEquals(1, projects.get(0).getId());
+        assertEquals("Project 1", projects.get(0).getTitle());
+        assertEquals("Description 1", projects.get(0).getDescription());
+
+        assertEquals(2, projects.get(1).getId());
+        assertEquals("Project 2", projects.get(1).getTitle());
+        assertEquals("Description 2", projects.get(1).getDescription());
     }
 
     @Test
-    @DisplayName("Read non-existing project from Database")
-    public void testLoadUsersNonExistingProjects() throws SQLException {}
+    @DisplayName("Read non-existing projects for a user from Database")
+    public void testLoadUsersNonExistingProjects() throws SQLException {
+        when(mockResultSet.next()).thenReturn(false); // no project available
+
+        int userId = 999; // non existent user
+        var projects = database.getUserProjects(userId);
+
+        verify(mockPreparedStatement).setInt(1, userId);
+
+        assertEquals(0, projects.size()); // expect no projects for this non existent user
+    }
 }
 
