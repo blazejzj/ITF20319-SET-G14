@@ -175,11 +175,17 @@ public class Database {
     }
 
     public void deleteProject(int projectID) throws SQLException {
-        String query = "DELETE FROM Projects WHERE id = ?";
-        try (Connection connection = connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, projectID);
-            preparedStatement.executeUpdate();
+        String deleteProjectQuery = "DELETE FROM Projects WHERE id = ?";
+        String deleteTasksQuery = "DELETE FROM Tasks WHERE project_id = ?";
+        try (Connection connection = connect()) {
+            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(deleteTasksQuery);
+            PreparedStatement deleteProjectStatement = connection.prepareStatement(deleteProjectQuery)) {
+                deleteProjectStatement.setInt(1, projectID);
+                deleteProjectStatement.executeUpdate();
+
+                deleteTasksStatement.setInt(1, projectID);
+                deleteTasksStatement.executeUpdate();
+            }
         }
     }
 }

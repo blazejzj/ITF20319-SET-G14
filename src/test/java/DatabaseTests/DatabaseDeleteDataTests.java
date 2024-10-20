@@ -35,17 +35,20 @@ public class DatabaseDeleteDataTests {
     }
 
     @Test
-    @DisplayName("Delete an existing project from the database")
-    public void testDeleteExistingProject() throws SQLException {
+    @DisplayName("Delete an existing project from the database and its tasks")
+    public void testDeleteExistingProjectAndTasks() throws SQLException {
         // assume id projetc
         int id = 1;
 
         // delete this project
         database.deleteProject(id);
 
-        // verify the query has been executed
-        verify(mockPreparedStatement).setInt(1, id);
-        verify(mockPreparedStatement).executeUpdate();
+        // verify the quereis has been executed
+        // We can't forget that the deletion of project also should delete all tasks that
+        // are inside this specific project
+        verify(mockConnection).prepareStatement("DELETE FROM Tasks WHERE project_id = ?");
+        verify(mockPreparedStatement, times(2)).setInt(1, id);
+        verify(mockPreparedStatement, times(2)).executeUpdate();
     }
 
 }
