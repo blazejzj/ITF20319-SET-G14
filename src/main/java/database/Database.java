@@ -2,6 +2,7 @@ package database;
 
 import models.Project;
 import models.Task;
+import models.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class Database {
         }
     }
 
-    public String loadUser(int userId) throws SQLException {
+    public User loadUser(int userId) throws SQLException {
         String query = "SELECT name FROM Users WHERE id = ?";
 
         try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -94,7 +95,9 @@ public class Database {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return resultSet.getString("name"); // get the name by id
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                return new User(id, name);
             } else { return null; } // if no user with "userId" exists return null
         }
     }
@@ -142,9 +145,8 @@ public class Database {
                     int id = resultSet.getInt("id");
                     String title = resultSet.getString("title");
                     String description = resultSet.getString("description");
-                    int userID = resultSet.getInt("userID");
 
-                    Project project = new Project(id, title, description, userID);
+                    Project project = new Project(id, title, description, userId);
                     projects.add(project);
                 }
         }

@@ -1,6 +1,7 @@
 package DatabaseTests;
 
 import database.Database;
+import models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ public class DatabaseLoadDataTests {
         doReturn(mockConnection).when(database).connect();
     }
 
+    // We use real User here, because its a simple bulletproof class that only uses getters
     @Test
     @DisplayName("Read existing user from Database")
     public void testLoadExistingUser() throws SQLException {
@@ -48,25 +50,28 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.getString("name")).thenReturn("Blazej");
 
         int userId = 1;
-        String userName = database.loadUser(userId);
+        User user = database.loadUser(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
-        assertEquals("Blazej", userName);
+        assertEquals(1, user.getId());
+        assertEquals("Blazej", user.getUserName());
     }
 
+    // We use real User here, because its a simple bulletproof class that only uses getters
     @Test
     @DisplayName("Read non-existing user from Database")
     public void testLoadNonExistingUser() throws SQLException {
         when(mockResultSet.next()).thenReturn(false);
 
         int userId = 999;
-        String userName = database.loadUser(userId);
+        User user = database.loadUser(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
-        assertNull(userName);
+        assertNull(user);
     }
+
 
     @Test
     @DisplayName("Read existing projects for a user from Database")
