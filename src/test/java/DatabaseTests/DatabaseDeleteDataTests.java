@@ -51,4 +51,18 @@ public class DatabaseDeleteDataTests {
         verify(mockPreparedStatement, times(2)).executeUpdate();
     }
 
+    @Test
+    @DisplayName("Delete an existing task from database")
+    public void testDeleteExistingTask() throws SQLException {
+        int id = 1;
+
+        // delete this task
+        database.deleteTask(id);
+
+        // verify the query has been exectued
+        verify(mockConnection).prepareStatement("DELETE FROM Tasks WHERE id = ?");
+        verify(mockPreparedStatement).setInt(1, id);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
 }
