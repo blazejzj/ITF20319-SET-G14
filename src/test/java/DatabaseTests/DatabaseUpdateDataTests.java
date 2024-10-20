@@ -31,6 +31,7 @@ public class DatabaseUpdateDataTests {
         doReturn(mockConnection).when(database).connect();
     }
 
+    // USER UPDATE TESTS
     @Test
     @DisplayName("Update an existing user name")
     public void testUpdateExistingUser() throws SQLException {
@@ -64,4 +65,8 @@ public class DatabaseUpdateDataTests {
         verify(mockPreparedStatement).setInt(2, id);
         verify(mockPreparedStatement).executeUpdate();
     }
+
+    // PROJECT UPDATE TESTS
+
+    // TASKS UPDATE TESTS
 }

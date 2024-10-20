@@ -49,6 +49,7 @@ public class DatabaseSaveDataTests {
         doReturn(mockConnection).when(database).connect();
     }
 
+    // USER CREATION TEST
     @Test
     @DisplayName("Save an user; insert a new row into Users table")
     public void testSaveUserIntoDatabase() throws SQLException {
@@ -64,6 +65,7 @@ public class DatabaseSaveDataTests {
         verify(mockPreparedStatement).executeUpdate();
     }
 
+    // TEST ID UNIQUENESS (TEST WORKS FOR USER/PROJECT/TASKS ALSO)
     @Test
     @DisplayName("Saved user returns newly generated ID")
     public void testSaveUserReturnsNewlyGeneratedId() throws SQLException {
@@ -80,6 +82,7 @@ public class DatabaseSaveDataTests {
         assertNotEquals(userID1, userID2);
     }
 
+    // PROJECT CREATION TEST
     @Test
     @DisplayName("Save a project into the database")
     public void testSaveProject() throws  SQLException {
@@ -100,6 +103,7 @@ public class DatabaseSaveDataTests {
         assertEquals(1, projectId);
     }
 
+    // TASK CREATION TEST
     @Test
     @DisplayName("Save a task into the database")
     public void testSaveTask() throws SQLException {

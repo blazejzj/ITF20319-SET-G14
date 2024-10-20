@@ -200,11 +200,16 @@ public class Database {
         try (Connection connection = connect()) {
             try (PreparedStatement deleteTasksStatement = connection.prepareStatement(QUERY_DELETE_TASKS_BY_PROJECT);
                  PreparedStatement deleteProjectStatement = connection.prepareStatement(QUERY_DELETE_PROJECT)) {
-                deleteProjectStatement.setInt(1, projectID);
-                deleteProjectStatement.executeUpdate();
 
                 deleteTasksStatement.setInt(1, projectID);
                 deleteTasksStatement.executeUpdate();
+
+                deleteProjectStatement.setInt(1, projectID);
+                int affectedRows =  deleteProjectStatement.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new SQLException("No rows affected");
+                }
             }
         }
     }
@@ -252,7 +257,11 @@ public class Database {
     public void deleteTask(int taskID) throws SQLException {
         try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(QUERY_DELETE_TASK)) {
             preparedStatement.setInt(1, taskID);
-            preparedStatement.executeUpdate();
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No rows affected");
+            }
         }
     }
 

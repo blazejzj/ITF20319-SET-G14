@@ -41,6 +41,8 @@ public class DatabaseLoadDataTests {
         doReturn(mockConnection).when(database).connect();
     }
 
+
+    // USER LOADING TESTS
     // We use real User here, because its a simple bulletproof class that only uses getters
     @Test
     @DisplayName("Read existing user from Database")
@@ -72,7 +74,7 @@ public class DatabaseLoadDataTests {
         assertNull(user);
     }
 
-
+    // PROJECT LOADING TESTS
     @Test
     @DisplayName("Read existing projects for a user from Database")
     public void testLoadUsersExistingProjects() throws SQLException {
@@ -110,5 +112,7 @@ public class DatabaseLoadDataTests {
 
         assertEquals(0, projects.size()); // expect no projects for this non existent user
     }
+
+    // TASKS LOADING TESTS
 }
 
