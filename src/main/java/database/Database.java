@@ -65,15 +65,6 @@ public class Database {
         }
     }
 
-    public int saveUser(String name) throws SQLException {
-        try (PreparedStatement preparedStatement = connect()
-                .prepareStatement(INSERT_USER_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, name);
-            preparedStatement.executeUpdate();
-            return getGeneratedKey(preparedStatement);
-        }
-    }
-
     public int getGeneratedKey(PreparedStatement preparedStatement) throws SQLException {
         try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
@@ -81,6 +72,17 @@ public class Database {
             } else {
                 throw new SQLException("Somethings went wrong. Can't generate unique ID");
             }
+        }
+    }
+
+    // USER METHODS
+
+    public int saveUser(String name) throws SQLException {
+        try (PreparedStatement preparedStatement = connect()
+                .prepareStatement(INSERT_USER_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+            return getGeneratedKey(preparedStatement);
         }
     }
 
@@ -96,6 +98,23 @@ public class Database {
             } else { return null; } // if no user with "userId" exists return null
         }
     }
+
+    public void updateUser(int id, String newName) throws SQLException {
+        String query = "UPDATE Users SET name = ? WHERE id = ?";
+        try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, newName);
+            preparedStatement.setInt(2, id);
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new SQLException("No rows affected");
+            }
+        }
+    }
+
+    public void deleteUser(int userId) throws SQLException {}
+
+    // PROJECT METHODS
 
     public int saveProject(String title, String description, int userId) throws SQLException {
         String query = "INSERT INTO Projects (title, description, userID) VALUES (?, ?, ?)";
@@ -131,6 +150,23 @@ public class Database {
         }
         return projects;
     }
+
+    public void deleteProject(int projectID) throws SQLException {
+        String deleteProjectQuery = "DELETE FROM Projects WHERE id = ?";
+        String deleteTasksQuery = "DELETE FROM Tasks WHERE project_id = ?";
+        try (Connection connection = connect()) {
+            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(deleteTasksQuery);
+                 PreparedStatement deleteProjectStatement = connection.prepareStatement(deleteProjectQuery)) {
+                deleteProjectStatement.setInt(1, projectID);
+                deleteProjectStatement.executeUpdate();
+
+                deleteTasksStatement.setInt(1, projectID);
+                deleteTasksStatement.executeUpdate();
+            }
+        }
+    }
+
+    // TASK METHODS
 
     public int saveTask(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays, int projectId) throws SQLException {
         String query = "INSERT INTO Tasks (title, description, dueDate, isFinished, isRepeating, repeatDays, project_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -173,21 +209,6 @@ public class Database {
         return tasks;
     }
 
-    public void deleteProject(int projectID) throws SQLException {
-        String deleteProjectQuery = "DELETE FROM Projects WHERE id = ?";
-        String deleteTasksQuery = "DELETE FROM Tasks WHERE project_id = ?";
-        try (Connection connection = connect()) {
-            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(deleteTasksQuery);
-            PreparedStatement deleteProjectStatement = connection.prepareStatement(deleteProjectQuery)) {
-                deleteProjectStatement.setInt(1, projectID);
-                deleteProjectStatement.executeUpdate();
-
-                deleteTasksStatement.setInt(1, projectID);
-                deleteTasksStatement.executeUpdate();
-            }
-        }
-    }
-
     public void deleteTask(int taskID) throws SQLException {
         String query = "DELETE FROM Tasks WHERE id = ?";
         try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -195,5 +216,7 @@ public class Database {
             preparedStatement.executeUpdate();
         }
     }
+
+
 }
 
