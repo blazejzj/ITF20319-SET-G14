@@ -52,12 +52,14 @@ public class Database {
     private static final String QUERY_DELETE_PROJECT = "DELETE FROM Projects WHERE id = ?";
     private static final String QUERY_DELETE_PROJECT_BY_USERID = "DELETE FROM Projects WHERE userID = ?";
     private static final String QUERY_DELETE_TASKS_BY_PROJECT = "DELETE FROM Tasks WHERE project_id = ?";
+    private static final String QUERY_UPDATE_PROJECT = "UPDATE Projects SET title = ?, description = ? WHERE id = ?";
 
     // TASK TABLE QUERIES
     private static final String QUERY_SAVE_TASK = "INSERT INTO Tasks (title, description, dueDate, isFinished, isRepeating, repeatDays, project_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String QUERY_SELECT_TASKS_BY_PROJECT = "SELECT * FROM Tasks WHERE project_id = ?";
     private static final String QUERY_DELETE_TASK = "DELETE FROM Tasks WHERE id = ?";
     private static final String QUERY_DELETE_TASKS_BY_USERID = "DELETE FROM Tasks WHERE project_id IN (SELECT id FROM Projects WHERE userID = ?)";
+    private static final String QUERY_UPDATE_TASK = "UPDATE Tasks SET title = ?, description = ?, dueDate = ?, isFinished = ?, isRepeating = ?, repeatDays = ? WHERE id = ?";
 
 
     // Constructor/s
@@ -67,7 +69,6 @@ public class Database {
 
     // Getters/Setters
     public String getDbURL() {return dbURL + dbName;}
-
 
     // Methods
     public Connection connect() throws SQLException {
@@ -175,7 +176,7 @@ public class Database {
         }
     }
 
-    public ArrayList<Project> getUserProjects(int userId) throws SQLException {
+    public ArrayList<Project> loadUserProjects(int userId) throws SQLException {
         ArrayList<Project> projects = new ArrayList<>(); // temp list to store projetcs
 
         try (Connection connection = connect();
@@ -214,6 +215,22 @@ public class Database {
         }
     }
 
+    // were including id on purpose, to get even more control over the object
+    // project is going to have an id anyways, but incase we want to update it we have teh possiblity
+    public void updateProject(int projectId, String newTitle, String newDescription) throws SQLException {
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_PROJECT)) {
+            preparedStatement.setString(1, newTitle);
+            preparedStatement.setString(2, newDescription);
+            preparedStatement.setInt(3, projectId);
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new SQLException("No rows affected. Project with ID " + projectId + " may not exist.");
+            }
+        }
+    }
+
     // TASK METHODS
     public int saveTask(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays, int projectId) throws SQLException {
         try (Connection connection = connect();
@@ -230,7 +247,7 @@ public class Database {
         }
     }
 
-    public ArrayList<Task> getAllProjectTasks (int projectId) throws SQLException {
+    public ArrayList<Task> loadTasks(int projectId) throws SQLException {
         ArrayList<Task> tasks = new ArrayList<>(); // temp list to store tasks
 
         try (Connection connection = connect();
@@ -264,6 +281,26 @@ public class Database {
             }
         }
     }
+
+    // same idea as the project when it comes to the updating the id
+    public void updateTask(int taskId, String newTitle, String newDescription, LocalDate newDueDate, int isFinished, int isRepeating, int repeatDays) throws SQLException {
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_TASK)) {
+            preparedStatement.setString(1, newTitle);
+            preparedStatement.setString(2, newDescription);
+            preparedStatement.setDate(3, Date.valueOf(newDueDate));
+            preparedStatement.setInt(4, isFinished);
+            preparedStatement.setInt(5, isRepeating);
+            preparedStatement.setInt(6, repeatDays);
+            preparedStatement.setInt(7, taskId);
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new SQLException("No rows affected. Task with ID " + taskId + " may not exist.");
+            }
+        }
+    }
+
 
 
 }

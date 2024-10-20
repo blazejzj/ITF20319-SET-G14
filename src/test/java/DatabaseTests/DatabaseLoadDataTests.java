@@ -84,7 +84,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.getInt("userID")).thenReturn(1); // Same user ID for both projects
 
         int userId = 1;
-        var projects = database.getUserProjects(userId);
+        var projects = database.loadUserProjects(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
@@ -104,7 +104,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.next()).thenReturn(false); // no project available
 
         int userId = 999; // non existent user
-        var projects = database.getUserProjects(userId);
+        var projects = database.loadUserProjects(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
@@ -129,7 +129,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.getInt("repeatDays")).thenReturn(0).thenReturn(0);
 
         int projectId = 1;
-        var tasks = database.getAllProjectTasks(projectId);
+        var tasks = database.loadTasks(projectId);
 
         verify(mockPreparedStatement).setInt(1, projectId);
 
@@ -160,7 +160,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.next()).thenReturn(false); // no tasks available
 
         int projectId = 999; // were assuming this id doesnt have any tasks
-        var tasks = database.getAllProjectTasks(projectId);
+        var tasks = database.loadTasks(projectId);
 
         verify(mockPreparedStatement).setInt(1, projectId);
 
