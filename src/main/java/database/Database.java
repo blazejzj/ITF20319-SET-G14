@@ -15,7 +15,7 @@ public class Database {
     private final String dbName;
     private final String dbURL = "jdbc:sqlite:";
 
-    // sql queries for table creation
+    // TABLE CREATION QUERIES
     private static final List<String> CREATE_TABLE_STATEMENTS = List.of(
             "CREATE TABLE IF NOT EXISTS Projects (" +
                     "id INTEGER PRIMARY KEY, " +
@@ -40,8 +40,24 @@ public class Database {
                     "name VARCHAR(45))"
     );
 
-    // sql queries
-    private static final String INSERT_USER_QUERY = "INSERT INTO Users (name) VALUES (?)";
+    // USER TABLE QUERIES
+    private static final String QUERY_INSERT_USER = "INSERT INTO Users (name) VALUES (?)";
+    private static final String QUERY_SELECT_USER_BY_ID = "SELECT name FROM Users WHERE id = ?";
+    private static final String QUERY_UPDATE_USER = "UPDATE Users SET name = ? WHERE id = ?";
+    private static final String QUERY_DELETE_USER = "DELETE FROM Users WHERE id = ?";
+
+    // PROJECT TABLE QUERIES
+    private static final String QUERY_SELECT_PROJECTS_BY_USERID = "SELECT * FROM Projects WHERE userID = ?";
+    private static final String QUERY_SAVE_PROJECT = "INSERT INTO Projects (title, description, userID) VALUES (?, ?, ?)";
+    private static final String QUERY_DELETE_PROJECT = "DELETE FROM Projects WHERE id = ?";
+    private static final String QUERY_DELETE_PROJECT_BY_USERID = "DELETE FROM Projects WHERE userID = ?";
+    private static final String QUERY_DELETE_TASKS_BY_PROJECT = "DELETE FROM Tasks WHERE project_id = ?";
+
+    // TASK TABLE QUERIES
+    private static final String QUERY_SAVE_TASK = "INSERT INTO Tasks (title, description, dueDate, isFinished, isRepeating, repeatDays, project_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String QUERY_SELECT_TASKS_BY_PROJECT = "SELECT * FROM Tasks WHERE project_id = ?";
+    private static final String QUERY_DELETE_TASK = "DELETE FROM Tasks WHERE id = ?";
+    private static final String QUERY_DELETE_TASKS_BY_USERID = "DELETE FROM Tasks WHERE project_id IN (SELECT id FROM Projects WHERE userID = ?)";
 
 
     // Constructor/s
@@ -55,7 +71,11 @@ public class Database {
 
     // Methods
     public Connection connect() throws SQLException {
-        return DriverManager.getConnection(getDbURL());
+        Connection connect = DriverManager.getConnection(getDbURL());
+        try(Statement statement = connect.createStatement()) {
+            statement.execute("PRAGMA foreign_keys = ON;");
+        }
+        return connect;
     }
 
     public void createTables() throws SQLException {
@@ -80,7 +100,7 @@ public class Database {
 
     public int saveUser(String name) throws SQLException {
         try (PreparedStatement preparedStatement = connect()
-                .prepareStatement(INSERT_USER_QUERY, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                .prepareStatement(QUERY_INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
             return getGeneratedKey(preparedStatement);
@@ -88,9 +108,8 @@ public class Database {
     }
 
     public User loadUser(int userId) throws SQLException {
-        String query = "SELECT name FROM Users WHERE id = ?";
-
-        try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_USER_BY_ID)) {
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -103,8 +122,8 @@ public class Database {
     }
 
     public void updateUser(int id, String newName) throws SQLException {
-        String query = "UPDATE Users SET name = ? WHERE id = ?";
-        try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_USER)) {
             preparedStatement.setString(1, newName);
             preparedStatement.setInt(2, id);
             int rowsAffected = preparedStatement.executeUpdate();
@@ -118,28 +137,22 @@ public class Database {
     public void deleteUser(int userId) throws SQLException {
         // The deletion of a certain user is much more complicated than probably
         // anticipated because we have to delete Tasks, Projects, and then the user itself.
-
-        // define the queries
-        String deleteUserQuery = "DELETE FROM Users WHERE id = ?";
-        String deleteProjectsQuery = "DELETE FROM Projects WHERE userID = ?";
-        String deleteTasksQuery = "DELETE FROM Tasks WHERE project_id IN (SELECT id FROM Projects WHERE userID = ?)";
-
         try (Connection connection = connect()) {
 
             // DELETE TASKS
-            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(deleteTasksQuery)) {
+            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(QUERY_DELETE_TASKS_BY_USERID)) {
                 deleteTasksStatement.setInt(1, userId);
                 deleteTasksStatement.executeUpdate();
             }
 
             // DELETE PROJECTS
-            try (PreparedStatement deleteProjectsStatement = connection.prepareStatement(deleteProjectsQuery)) {
+            try (PreparedStatement deleteProjectsStatement = connection.prepareStatement(QUERY_DELETE_PROJECT_BY_USERID)) {
                 deleteProjectsStatement.setInt(1, userId);
                 deleteProjectsStatement.executeUpdate();
             }
 
             // DELETE USER
-            try (PreparedStatement deleteUsersStatement = connection.prepareStatement(deleteUserQuery)) {
+            try (PreparedStatement deleteUsersStatement = connection.prepareStatement(QUERY_DELETE_USER)) {
                 deleteUsersStatement.setInt(1, userId);
                 int affectedRows = deleteUsersStatement.executeUpdate();
                 if(affectedRows == 0) {
@@ -152,9 +165,8 @@ public class Database {
 
     // PROJECT METHODS
     public int saveProject(String title, String description, int userId) throws SQLException {
-        String query = "INSERT INTO Projects (title, description, userID) VALUES (?, ?, ?)";
         try (Connection connection = connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SAVE_PROJECT, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, title);
                 preparedStatement.setString(2, description);
                 preparedStatement.setInt(3, userId);
@@ -164,11 +176,10 @@ public class Database {
     }
 
     public ArrayList<Project> getUserProjects(int userId) throws SQLException {
-        String query = "SELECT * FROM Projects WHERE userID = ?";
         ArrayList<Project> projects = new ArrayList<>(); // temp list to store projetcs
 
         try (Connection connection = connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_PROJECTS_BY_USERID)) {
 
                 preparedStatement.setInt(1, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -186,11 +197,9 @@ public class Database {
     }
 
     public void deleteProject(int projectID) throws SQLException {
-        String deleteProjectQuery = "DELETE FROM Projects WHERE id = ?";
-        String deleteTasksQuery = "DELETE FROM Tasks WHERE project_id = ?";
         try (Connection connection = connect()) {
-            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(deleteTasksQuery);
-                 PreparedStatement deleteProjectStatement = connection.prepareStatement(deleteProjectQuery)) {
+            try (PreparedStatement deleteTasksStatement = connection.prepareStatement(QUERY_DELETE_TASKS_BY_PROJECT);
+                 PreparedStatement deleteProjectStatement = connection.prepareStatement(QUERY_DELETE_PROJECT)) {
                 deleteProjectStatement.setInt(1, projectID);
                 deleteProjectStatement.executeUpdate();
 
@@ -201,11 +210,9 @@ public class Database {
     }
 
     // TASK METHODS
-
     public int saveTask(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays, int projectId) throws SQLException {
-        String query = "INSERT INTO Tasks (title, description, dueDate, isFinished, isRepeating, repeatDays, project_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SAVE_TASK, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, title);
             preparedStatement.setString(2, description);
             preparedStatement.setDate(3, java.sql.Date.valueOf(dueDate));
@@ -219,11 +226,10 @@ public class Database {
     }
 
     public ArrayList<Task> getAllProjectTasks (int projectId) throws SQLException {
-        String query  = "SELECT * FROM Tasks WHERE project_id = ?"; // based on project id get all the tasks
         ArrayList<Task> tasks = new ArrayList<>(); // temp list to store tasks
 
         try (Connection connection = connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_TASKS_BY_PROJECT)) {
                  preparedStatement.setInt(1, projectId);
                  ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -244,8 +250,7 @@ public class Database {
     }
 
     public void deleteTask(int taskID) throws SQLException {
-        String query = "DELETE FROM Tasks WHERE id = ?";
-        try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(QUERY_DELETE_TASK)) {
             preparedStatement.setInt(1, taskID);
             preparedStatement.executeUpdate();
         }
