@@ -173,5 +173,14 @@ public class Database {
         }
         return tasks;
     }
+
+    public void deleteProject(int projectID) throws SQLException {
+        String query = "DELETE FROM Projects WHERE id = ?";
+        try (Connection connection = connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, projectID);
+            preparedStatement.executeUpdate();
+        }
+    }
 }
 
