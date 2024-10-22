@@ -12,7 +12,6 @@ public class Task {
     private LocalDate dueDate;
     private int repeatDays;
 
-
     public Task(String title, String description, LocalDate dueDate, int isDone, int repeats, int repeatDays) {
         this.title = title;
         this.description = description;

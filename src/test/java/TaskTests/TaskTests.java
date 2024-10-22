@@ -3,30 +3,45 @@ package TaskTests;
 import models.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskTests {
+
     @Test
-    @DisplayName("Update toggle Done value correctly")
+    @DisplayName("Testing Toggle Done True/False")
     public void toggleDoneValueCorrectly() {
-        Task mockTask = mock(Task.class);
+        // Arrange
+        Task testTask = new Task("Test", "Test Description", LocalDate.now(), 0, 0, 0);
 
-        // arrange
-        when(mockTask.getIsDone()).thenReturn(0); // 0 is false
-        // act
-        mockTask.toggleDone();
-        // verify
-        verify(mockTask).toggleDone();
-        when(mockTask.getIsDone()).thenReturn(1);
+        // Start
+        assertEquals(0, testTask.getIsDone(), "isDone should be false (0)");
 
-        // assert
-        int result = mockTask.getIsDone();
+        // Act
+        testTask.toggleDone();
 
-        assertEquals(1, result); // 1 is true
+        // Assert
+        assertEquals(1, testTask.getIsDone(), "isDone should be true (1)");
+
+        // Act
+        testTask.toggleDone();
+
+        // Assert
+        assertEquals(0, testTask.getIsDone(), "isDone should be false (0)");
+    }
+
+    @Test
+    @DisplayName("Task Without ID")
+    public void taskNoIdCorrect() {
+
+        // Arrange
+        Task testTaskNoID = new Task("Test", "Description", LocalDate.now(), 0, 1, 5);
+
+        // Assert
+        assertEquals("Test", testTaskNoID.getTitle());
+        assertEquals("Description", testTaskNoID.getDescription());
+        assertEquals(0, testTaskNoID.getIsDone());
+        assertEquals(1, testTaskNoID.getRepeats());
     }
 }
-
-
