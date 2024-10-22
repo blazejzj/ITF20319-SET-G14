@@ -44,4 +44,20 @@ public class TaskTests {
         assertEquals(0, testTaskNoID.getIsDone());
         assertEquals(1, testTaskNoID.getRepeats());
     }
+
+    @Test
+    @DisplayName("Task With ID")
+    public void taskWithIdCorrect() {
+        int expectedId = 0;
+        LocalDate dueDate = LocalDate.now();
+
+        // Arrange
+        Task testTaskWithID = new Task("Test", "Description", dueDate, 0, 1, expectedId);
+
+        assertEquals(expectedId, testTaskWithID.getIsDone());
+        assertEquals("Test", testTaskWithID.getTitle());
+        assertEquals("Description", testTaskWithID.getDescription());
+        assertEquals(0, testTaskWithID.getIsDone());
+        assertEquals(1, testTaskWithID.getRepeats());
+    }
 }
