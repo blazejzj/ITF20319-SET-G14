@@ -48,16 +48,46 @@ public class TaskTests {
     @Test
     @DisplayName("Task With ID")
     public void taskWithIdCorrect() {
-        int expectedId = 0;
+        int expectedId = 0; //burde kanskje testes med tall men trenger muligens mer?
         LocalDate dueDate = LocalDate.now();
 
         // Arrange
         Task testTaskWithID = new Task("Test", "Description", dueDate, 0, 1, expectedId);
 
+        // Assert
         assertEquals(expectedId, testTaskWithID.getIsDone());
         assertEquals("Test", testTaskWithID.getTitle());
         assertEquals("Description", testTaskWithID.getDescription());
         assertEquals(0, testTaskWithID.getIsDone());
         assertEquals(1, testTaskWithID.getRepeats());
+    }
+
+    @Test
+    @DisplayName("Test for Getters/Setters")
+    public void taskGettersSettersCorrect() {
+        LocalDate dueDate = LocalDate.now();
+        Task testGettersSetters = new Task("Test", "Description", dueDate, 0, 1, 0);
+
+        // Testing Set and Get for Title
+        testGettersSetters.setTitle("Test");
+        assertEquals("Test", testGettersSetters.getTitle());
+
+        // Testing Set and Get for Description
+        testGettersSetters.setDescription("Description");
+        assertEquals("Description", testGettersSetters.getDescription());
+
+        // Testing Set and Get for DueDate
+        testGettersSetters.setDueDate(dueDate);
+        assertEquals(dueDate, testGettersSetters.getDueDate());
+
+        // Test Set and Get for isDone
+        testGettersSetters.setIsDone(0);
+        assertEquals(0, testGettersSetters.getIsDone());
+
+        // Test Set and Get for repeats
+        testGettersSetters.setRepeats(0);
+        assertEquals(0, testGettersSetters.getRepeats());
+
+        // Ignorerer repeatdays foreløpig
     }
 }
