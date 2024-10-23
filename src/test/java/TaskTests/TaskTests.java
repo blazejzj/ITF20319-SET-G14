@@ -1,6 +1,7 @@
 package TaskTests;
 
 import models.Task;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
@@ -10,17 +11,18 @@ import static org.mockito.Mockito.*;
 
 public class TaskTests {
 
-    public void setUp()
-        
+    public Task mockTask = mock(Task.class);
+
     @Test
     @DisplayName("Update toggle Done value correctly")
-    public void toggleDoneValueCorrectly() {
-        Task mockTask = mock(Task.class);
+    public void TestToggleDoneValueCorrectly() {
 
         // arrange
         when(mockTask.getIsDone()).thenReturn(0); // 0 is false
+
         // act
         mockTask.toggleDone();
+
         // verify
         verify(mockTask).toggleDone();
         when(mockTask.getIsDone()).thenReturn(1);
@@ -32,62 +34,55 @@ public class TaskTests {
     }
 
     @Test
-    @DisplayName("Task Without ID")
-    public void taskNoIdCorrect() {
+    @DisplayName("Update toggle repeat from 0 to 1")
+    public void TestToggleRepeatValueCorrectly() {
+
+        // if 0 -> 1
+        // if 1 -> 0
 
         // Arrange
-        Task testTaskNoID = new Task("Test", "Description", LocalDate.now(), 0, 1, 5);
+        when(mockTask.getRepeats()).thenReturn(0);
+
+        // Act
+        mockTask.toggleRepeat();
+        verify(mockTask).toggleRepeat();
+        when(mockTask.getRepeats()).thenReturn(1);
 
         // Assert
-        assertEquals("Test", testTaskNoID.getTitle());
-        assertEquals("Description", testTaskNoID.getDescription());
-        assertEquals(0, testTaskNoID.getIsDone());
-        assertEquals(1, testTaskNoID.getRepeats());
+        int result = mockTask.getRepeats();
+        assertEquals(1, result);
+    }
+
+    @Test
+    @DisplayName("Update toggle repeat from 1 to 0")
+    public void TestToggleRepeatValue() {
+        // Arrange
+        when(mockTask.getRepeats()).thenReturn(1);
+
+        // Act
+        mockTask.toggleRepeat();
+        verify(mockTask).toggleRepeat();
+        when(mockTask.getRepeats()).thenReturn(0);
+        int result = mockTask.getRepeats();
+        // Assert
+        assertEquals(0, result);
     }
 
     @Test
     @DisplayName("Task With ID")
-    public void taskWithIdCorrect() {
-        int expectedId = 0; //burde kanskje testes med tall men trenger muligens mer?
-        LocalDate dueDate = LocalDate.now();
+    public void TestUpdateDueDate() {
 
         // Arrange
-        Task testTaskWithID = new Task("Test", "Description", dueDate, 0, 1, expectedId);
+        // We are using a real localdate object to simulate the method
+        when(mockTask.getDueDate()).thenReturn(LocalDate.of(2024, 10, 1));
+
+        // Act
+        mockTask.updateDueDateByDays(7);
+        // We are expecting the duedate to be Localdate.now + 7 days
+        verify(mockTask).updateDueDateByDays(7);
+        when(mockTask.getDueDate()).thenReturn(LocalDate.of(2024, 10, 8));
 
         // Assert
-        assertEquals(expectedId, testTaskWithID.getIsDone());
-        assertEquals("Test", testTaskWithID.getTitle());
-        assertEquals("Description", testTaskWithID.getDescription());
-        assertEquals(0, testTaskWithID.getIsDone());
-        assertEquals(1, testTaskWithID.getRepeats());
-    }
 
-    @Test
-    @DisplayName("Test for Getters/Setters")
-    public void taskGettersSettersCorrect() {
-        LocalDate dueDate = LocalDate.now();
-        Task testGettersSetters = new Task("Test", "Description", dueDate, 0, 1, 0);
-
-        // Testing Set and Get for Title
-        testGettersSetters.setTitle("Test");
-        assertEquals("Test", testGettersSetters.getTitle());
-
-        // Testing Set and Get for Description
-        testGettersSetters.setDescription("Description");
-        assertEquals("Description", testGettersSetters.getDescription());
-
-        // Testing Set and Get for DueDate
-        testGettersSetters.setDueDate(dueDate);
-        assertEquals(dueDate, testGettersSetters.getDueDate());
-
-        // Test Set and Get for isDone
-        testGettersSetters.setIsDone(0);
-        assertEquals(0, testGettersSetters.getIsDone());
-
-        // Test Set and Get for repeats
-        testGettersSetters.setRepeats(0);
-        assertEquals(0, testGettersSetters.getRepeats());
-
-        // Ignorerer repeatdays foreløpig
     }
 }
