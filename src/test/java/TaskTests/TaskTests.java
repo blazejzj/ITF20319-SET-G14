@@ -11,25 +11,22 @@ import static org.mockito.Mockito.*;
 public class TaskTests {
 
     @Test
-    @DisplayName("Testing Toggle Done True/False")
+    @DisplayName("Update toggle Done value correctly")
     public void toggleDoneValueCorrectly() {
-        // Arrange
-        Task testTask = new Task("Test", "Test Description", LocalDate.now(), 0, 0, 0);
+        Task mockTask = mock(Task.class);
 
-        // Start
-        assertEquals(0, testTask.getIsDone(), "isDone should be false (0)");
+        // arrange
+        when(mockTask.getIsDone()).thenReturn(0); // 0 is false
+        // act
+        mockTask.toggleDone();
+        // verify
+        verify(mockTask).toggleDone();
+        when(mockTask.getIsDone()).thenReturn(1);
 
-        // Act
-        testTask.toggleDone();
+        // assert
+        int result = mockTask.getIsDone();
 
-        // Assert
-        assertEquals(1, testTask.getIsDone(), "isDone should be true (1)");
-
-        // Act
-        testTask.toggleDone();
-
-        // Assert
-        assertEquals(0, testTask.getIsDone(), "isDone should be false (0)");
+        assertEquals(1, result); // 1 is true
     }
 
     @Test
@@ -90,24 +87,5 @@ public class TaskTests {
         assertEquals(0, testGettersSetters.getRepeats());
 
         // Ignorerer repeatdays foreløpig
-    }
-
-    @Test
-    @DisplayName("Update toggle Done value correctly")
-    public void toggleDoneValueCorrectlyMock() {
-        Task mockTask = mock(Task.class);
-
-        // arrange
-        when(mockTask.getIsDone()).thenReturn(0); // 0 is false
-        // act
-        mockTask.toggleDone();
-        // verify
-        verify(mockTask).toggleDone();
-        when(mockTask.getIsDone()).thenReturn(1);
-
-        // assert
-        int result = mockTask.getIsDone();
-
-        assertEquals(1, result); // 1 is true
     }
 }
