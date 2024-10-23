@@ -10,6 +10,8 @@ import static org.mockito.Mockito.*;
 
 public class TaskTests {
 
+    public void setUp()
+        
     @Test
     @DisplayName("Update toggle Done value correctly")
     public void toggleDoneValueCorrectly() {
