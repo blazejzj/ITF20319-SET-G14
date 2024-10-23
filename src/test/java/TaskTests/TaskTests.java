@@ -3,10 +3,10 @@ package TaskTests;
 import models.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-<<<<<<< HEAD
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class TaskTests {
 
@@ -91,17 +91,10 @@ public class TaskTests {
 
         // Ignorerer repeatdays foreløpig
     }
-}
-=======
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
-
-public class TaskTests {
     @Test
     @DisplayName("Update toggle Done value correctly")
-    public void toggleDoneValueCorrectly() {
+    public void toggleDoneValueCorrectlyMock() {
         Task mockTask = mock(Task.class);
 
         // arrange
@@ -118,6 +111,3 @@ public class TaskTests {
         assertEquals(1, result); // 1 is true
     }
 }
-
-
->>>>>>> 9ceb6425ac6ad71dc87c0aff3fd0c966d262c306
