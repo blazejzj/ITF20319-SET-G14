@@ -1,8 +1,8 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
 import org.doProject.infrastructure.domain.Database;
+import org.doProject.common.domain.*;
 
-import models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

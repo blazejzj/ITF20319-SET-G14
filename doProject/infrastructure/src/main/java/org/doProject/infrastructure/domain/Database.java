@@ -1,5 +1,7 @@
 package org.doProject.infrastructure.domain;
 
+import org.doProject.common.domain.*;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

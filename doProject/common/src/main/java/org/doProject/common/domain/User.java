@@ -1,42 +1,47 @@
+package org.doProject.common.domain;
 import java.util.ArrayList;
+
 
 //Instance variables
 public class User {
-    private String fullName;
+    private int id;
     private String userName;
-    private ArrayList<Project> projects;
+    private ArrayList<Project> projects = new ArrayList<>();
 
 
 //Constructors
-    public User(String userName, String fullName) {
-        this.fullName = fullName;
+    public User(String userName) {
         this.userName = userName;
-        this.projects = new ArrayList<>();}
+    }
 
+    public User(int id, String userName) {
+        this.id = id;
+        this.userName = userName;
+    }
 
-// Getters
-    public String getFullName() {
-        return fullName;}
-
+    // Getters
     public String getUserName() {
         return userName;}
 
     public ArrayList<Project> getProjects() {
         return projects;}
 
+    public int getId() {
+        return id;
+    }
 
-//Setters
-    public void setFullName(String fullName) {
-        this.fullName = fullName;}
-
+    //Setters
     public void setUserName(String userName) {
         this.userName = userName;}
 
     public void setProjects(ArrayList<Project> projects) {
         this.projects = projects;}
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
-//Methods
+    //Methods
     public void addProject(Project project) {
         this.projects.add(project);}
 

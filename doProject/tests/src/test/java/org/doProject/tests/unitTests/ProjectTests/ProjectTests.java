@@ -1,13 +1,13 @@
+package org.doProject.tests.unitTests.ProjectTests;
+
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Array;
+import org.doProject.common.domain.Project;
+import org.doProject.common.domain.Task;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 
