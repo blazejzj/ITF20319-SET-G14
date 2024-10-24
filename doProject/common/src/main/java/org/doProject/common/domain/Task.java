@@ -1,4 +1,5 @@
-package models;
+package org.doProject.common.domain;
+
 import java.time.LocalDate;
 
 public class Task {

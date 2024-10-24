@@ -1,7 +1,7 @@
-package TaskTests;
+package org.doProject.tests.unitTests.TaskTests;
 
-import models.Task;
-import org.junit.jupiter.api.BeforeEach;
+import org.doProject.common.domain.Task;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
@@ -69,7 +69,7 @@ public class TaskTests {
     }
 
     @Test
-    @DisplayName("Task With ID")
+    @DisplayName("Update due date by specific amount of days")
     public void TestUpdateDueDate() {
 
         // Arrange
