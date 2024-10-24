@@ -1,8 +1,9 @@
-package DatabaseTests;
+package org.doProject.tests.unitTests.DatabaseTests;
 
-import database.Database;
+import org.doProject.infrastructure.domain.Database;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Spy;
 
 import java.sql.Connection;
 import java.sql.SQLException;

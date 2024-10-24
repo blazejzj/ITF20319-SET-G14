@@ -1,6 +1,7 @@
-package DatabaseTests;
+package org.doProject.tests.unitTests.DatabaseTests;
 
-import database.Database;
+import org.doProject.infrastructure.domain.Database;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,11 +73,12 @@ public class DatabaseTablesTests {
                         "dueDate DATE, " +
                         "isFinished INTEGER, " +
                         "isRepeating INTEGER, " +
+                        "repeatDays INTEGER, " + // every x amount of days the task is going to be repeating
                         "project_id INTEGER, " +
                         "FOREIGN KEY (project_id) REFERENCES Projects(id))"
         );
     }
-
+    
     @Test
     @DisplayName("User table has all the necessary columns")
     public void testUserTableAllColumnsExist() throws SQLException {
