@@ -5,46 +5,55 @@ import java.util.ArrayList;
 
 //Instance variables
 public class User {
-    private String fullName;
+    private int id;
     private String userName;
     private ArrayList<Project> projects;
 
 
 //Constructors
-    public User(String userName, String fullName) {
-        this.fullName = fullName;
+    public User(int id, String userName) {
+        this.id = id;
         this.userName = userName;
-        this.projects = new ArrayList<>();}
+        this.projects = new ArrayList<>();
+    }
 
 
 // Getters
-    public String getFullName() {
-        return fullName;}
+    public int getId() {
+        return id;
+    }
 
     public String getUserName() {
-        return userName;}
+        return userName;
+    }
 
     public ArrayList<Project> getProjects() {
-        return projects;}
+        return projects;
+    }
 
 
 //Setters
-    public void setFullName(String fullName) {
-        this.fullName = fullName;}
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setUserName(String userName) {
-        this.userName = userName;}
+        this.userName = userName;
+    }
 
     public void setProjects(ArrayList<Project> projects) {
-        this.projects = projects;}
+        this.projects = projects;
+    }
 
 
 //Methods
     public void addProject(Project project) {
-        this.projects.add(project);}
+        this.projects.add(project);
+    }
 
     public void removeProject(Project project) {
-        this.projects.remove(project);}
+        this.projects.remove(project);
+    }
 
     public void showProjects() {
         if (projects.isEmpty()) {
@@ -53,7 +62,8 @@ public class User {
         else {
             System.out.println("Projects: ");
             for (Project project : projects) {
-                System.out.println("Project ID: " + project.getId() + ", Title: " + project.getTitle());}
+                System.out.println("Project ID: " + project.getId() + ", Title: " + project.getTitle());
+            }
         }
     }
 
