@@ -1,20 +1,23 @@
+package org.doProject.common.domain;
+
 import java.util.ArrayList;
 
 public class Project {
 
     // Variables
+    private int id;
     private static int projectCounter = 0;
     private String title;
     private String description;
-    private ArrayList<Task> tasks;
+    private ArrayList<Task> tasks = new ArrayList<>();
     private int userID;
 
 
     // Constructor 1
-    public Project(String title, String description, ArrayList<Task> tasks, int userID) {
+    public Project(int id, String title, String description, int userID) {
+        this.id = id;
         this.title = title;
         this.description = description;
-        this.tasks = tasks;
         this.userID = userID;
     }
 
@@ -31,13 +34,14 @@ public class Project {
     public String getDescription(){ return description;}
     public ArrayList<Task> getTasks(){ return tasks;}
     public int getUserID(){ return userID;}
-
+    public int getId() {return id;}
 
     // Setters
     public void setTitle(String Title) {this.title = Title;}
     public void setDescription(String Description) {this.description = Description;}
     public void setTasks(ArrayList<Task> tasks) {this.tasks = tasks;}
     public void setUserID(int userID) {this.userID = userID;}
+    public void setId(int id) {this.id = id;}
 
 
     // Methods
@@ -53,9 +57,9 @@ public class Project {
 
     public void taskIsDone(Task task) {
         if (tasks.contains(task)) {
-            task.setDone(true);
+            task.setIsFinished(1);
             //System.out.println(task.getTitle() + " is done.");
-        } else {
+        } else task.setIsFinished(0);{
             //System.out.println(task.getTitle() + " is not done");
         }
     }

@@ -1,7 +1,6 @@
-package TaskTests;
+package org.doProject.tests.unitTests.TaskTests;
 
-import models.Task;
-import org.junit.jupiter.api.BeforeEach;
+import org.doProject.common.domain.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
@@ -18,17 +17,17 @@ public class TaskTests {
     public void TestToggleDoneValueCorrectly() {
 
         // arrange
-        when(mockTask.getIsDone()).thenReturn(0); // 0 is false
+        when(mockTask.getIsFinished()).thenReturn(0); // 0 is false
 
         // act
         mockTask.toggleDone();
 
         // verify
         verify(mockTask).toggleDone();
-        when(mockTask.getIsDone()).thenReturn(1);
+        when(mockTask.getIsFinished()).thenReturn(1);
 
         // assert
-        int result = mockTask.getIsDone();
+        int result = mockTask.getIsFinished();
 
         assertEquals(1, result); // 1 is true
     }
@@ -41,15 +40,15 @@ public class TaskTests {
         // if 1 -> 0
 
         // Arrange
-        when(mockTask.getRepeats()).thenReturn(0);
+        when(mockTask.getIsRepeating()).thenReturn(0);
 
         // Act
         mockTask.toggleRepeat();
         verify(mockTask).toggleRepeat();
-        when(mockTask.getRepeats()).thenReturn(1);
+        when(mockTask.getIsRepeating()).thenReturn(1);
 
         // Assert
-        int result = mockTask.getRepeats();
+        int result = mockTask.getIsRepeating();
         assertEquals(1, result);
     }
 
@@ -57,13 +56,13 @@ public class TaskTests {
     @DisplayName("Update toggle repeat from 1 to 0")
     public void TestToggleRepeatValue() {
         // Arrange
-        when(mockTask.getRepeats()).thenReturn(1);
+        when(mockTask.getIsRepeating()).thenReturn(1);
 
         // Act
         mockTask.toggleRepeat();
         verify(mockTask).toggleRepeat();
-        when(mockTask.getRepeats()).thenReturn(0);
-        int result = mockTask.getRepeats();
+        when(mockTask.getIsRepeating()).thenReturn(0);
+        int result = mockTask.getIsRepeating();
         // Assert
         assertEquals(0, result);
     }
