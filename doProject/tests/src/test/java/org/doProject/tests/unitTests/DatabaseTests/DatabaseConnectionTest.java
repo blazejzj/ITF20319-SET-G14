@@ -3,7 +3,6 @@ package org.doProject.tests.unitTests.DatabaseTests;
 import org.doProject.infrastructure.domain.Database;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Spy;
 
 import java.sql.Connection;
 import java.sql.SQLException;

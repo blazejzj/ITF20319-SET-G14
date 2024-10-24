@@ -1,59 +1,52 @@
 package org.doProject.common.domain;
-
-import org.doProject.common.domain.Project;
 import java.util.ArrayList;
+
 
 //Instance variables
 public class User {
     private int id;
     private String userName;
-    private ArrayList<Project> projects;
+    private ArrayList<Project> projects = new ArrayList<>();
 
 
-//Constructors
+    //Constructors
+    public User(String userName) {
+        this.userName = userName;
+    }
+
     public User(int id, String userName) {
         this.id = id;
         this.userName = userName;
-        this.projects = new ArrayList<>();
     }
 
+    // Getters
+    public String getUserName() {
+        return userName;}
 
-// Getters
+    public ArrayList<Project> getProjects() {
+        return projects;}
+
     public int getId() {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
-    }
+    //Setters
+    public void setUserName(String userName) {
+        this.userName = userName;}
 
-    public ArrayList<Project> getProjects() {
-        return projects;
-    }
+    public void setProjects(ArrayList<Project> projects) {
+        this.projects = projects;}
 
-
-//Setters
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setProjects(ArrayList<Project> projects) {
-        this.projects = projects;
-    }
-
-
-//Methods
+    //Methods
     public void addProject(Project project) {
-        this.projects.add(project);
-    }
+        this.projects.add(project);}
 
     public void removeProject(Project project) {
-        this.projects.remove(project);
-    }
+        this.projects.remove(project);}
 
     public void showProjects() {
         if (projects.isEmpty()) {
@@ -62,8 +55,7 @@ public class User {
         else {
             System.out.println("Projects: ");
             for (Project project : projects) {
-                System.out.println("Project ID: " + project.getId() + ", Title: " + project.getTitle());
-            }
+                System.out.println("Project ID: " + project.getId() + ", Title: " + project.getTitle());}
         }
     }
 

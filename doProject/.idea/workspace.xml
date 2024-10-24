@@ -5,10 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ca1fd42-9109-4ca0-bbdc-ea41e4338491" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../src/test/java/TaskTests/TaskTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/models/Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/models/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/ProjectTests/ProjectTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/ProjectTests/ProjectTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Task.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infrastructure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infrastructure/src/main/java/org/doProject/infrastructure/domain/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/src/main/java/org/doProject/infrastructure/domain/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseConnectionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseConnectionTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseLoadDataTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseLoadDataTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/.idea/src.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Project.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Task.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/models/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/TaskTests/TaskTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/test.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +65,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "JUnit.DatabaseLoadDataTests.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "Merging hex-architecture",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/blazejzj/repos/ITF20319-SET-G14/doProject",
     "node.js.detected.package.eslint": "true",
@@ -76,10 +98,22 @@
       <workItem from="1729687925468" duration="684000" />
       <workItem from="1729753711782" duration="1043000" />
       <workItem from="1729755249685" duration="1760000" />
+      <workItem from="1729772341722" duration="1800000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
