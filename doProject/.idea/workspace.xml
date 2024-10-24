@@ -5,24 +5,61 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0ca1fd42-9109-4ca0-bbdc-ea41e4338491" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/core/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/infrastructure/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/org/doProject/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/infrastructure/src/main/java/org/doProject/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/material_theme_project_new.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/database/Database.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Project.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Task.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/DatabaseTests/DatabaseConnectionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/DatabaseTests/DatabaseDeleteDataTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/DatabaseTests/DatabaseLoadDataTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/DatabaseTests/DatabaseSaveDataTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/DatabaseTests/DatabaseTablesTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/DatabaseTests/DatabaseUpdateDataTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/ProjectTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2nq5mWU8PDv8yAIkJcNgpfZe2uC" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -30,8 +67,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "hex-architecture",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/blazejzj/repos/ITF20319-SET-G14/doProject",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,6 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1729687924468</updated>
       <workItem from="1729687925468" duration="684000" />
+      <workItem from="1729753711782" duration="1043000" />
     </task>
     <servers />
   </component>
