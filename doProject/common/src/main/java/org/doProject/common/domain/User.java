@@ -1,3 +1,6 @@
+package org.doProject.common.domain;
+
+import org.doProject.common.domain.Project;
 import java.util.ArrayList;
 
 //Instance variables

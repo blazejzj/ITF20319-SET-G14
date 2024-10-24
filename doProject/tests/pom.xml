@@ -26,6 +26,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.doProject</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.3</version>
