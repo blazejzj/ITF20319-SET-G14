@@ -17,9 +17,12 @@ public class User {
 
 
     // Getters
+<<<<<<< HEAD
     public int getId() {
         return id;
     }
+=======
+>>>>>>> origin/user-setup
 
     public String getUserName() {
         return userName;}
@@ -29,9 +32,12 @@ public class User {
 
 
     //Setters
+<<<<<<< HEAD
     public void setId(int id) {
         this.id = id;
     }
+=======
+>>>>>>> origin/user-setup
 
     public void setUserName(String userName) {
         this.userName = userName;}
