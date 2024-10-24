@@ -8,55 +8,26 @@ public class User {
     private String userName;
     private ArrayList<Project> projects = new ArrayList<>();
 
-
     //Constructors
-    public User(String userName) {
-        this.userName = userName;
-    }
-
-    public User(int id, String userName) {
-        this.id = id;
-        this.userName = userName;
-    }
-
-    // Getters
-    public String getUserName() {
-        return userName;}
-
-    public ArrayList<Project> getProjects() {
-        return projects;}
-
-    public int getId() {
-        return id;
-    }
-
-    //Setters
-    public void setUserName(String userName) {
+    public User(String userName) {this.userName = userName;}
+    public User(int id, String userName) {this.id = id;
         this.userName = userName;}
 
-    public void setProjects(ArrayList<Project> projects) {
-        this.projects = projects;}
+    // Getters
+    public String getUserName() {return userName;}
+    public int getId() {return id;}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    //Setters
+    public void setUserName(String userName) {this.userName = userName;}
+    public void setId(int id) {this.id = id;}
 
     //Methods
-    public void addProject(Project project) {
-        this.projects.add(project);}
+    public void addProject(Project project) {this.projects.add(project);}
+    public void removeProject(Project project) {this.projects.remove(project);} //fjerne et enkelt prosjekt
+    public void removeAllProjects() {this.projects.clear();} //fjerne alle brukerens prosjekter
 
-    public void removeProject(Project project) {
-        this.projects.remove(project);}
-
-    public void showProjects() {
-        if (projects.isEmpty()) {
-            System.out.println("No projects found.");
-        }
-        else {
-            System.out.println("Projects: ");
-            for (Project project : projects) {
-                System.out.println("Project ID: " + project.getId() + ", Title: " + project.getTitle());}
-        }
-    }
-
+    //overload
+    public void removeProjectById(int projectId) {projects.removeIf(project -> project.getId() == projectId);}
 }
+
+
