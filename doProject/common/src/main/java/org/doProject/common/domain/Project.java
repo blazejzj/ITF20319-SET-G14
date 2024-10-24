@@ -1,6 +1,7 @@
 package org.doProject.common.domain;
 
 import java.util.ArrayList;
+import org.doProject.common.domain.Task;
 
 public class Project {
 
