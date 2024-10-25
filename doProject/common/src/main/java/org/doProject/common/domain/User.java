@@ -17,6 +17,9 @@ public class User {
     public String getUserName() {return userName;}
     public int getId() {return id;}
 
+    // la til denne for å få testene til å fungere
+    public ArrayList<Project> getProjects() {return projects;}
+
     //Setters
     public void setUserName(String userName) {this.userName = userName;}
     public void setId(int id) {this.id = id;}
