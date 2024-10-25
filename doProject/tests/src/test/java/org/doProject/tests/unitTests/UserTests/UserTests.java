@@ -2,24 +2,36 @@ package org.doProject.tests.unitTests.UserTests;
 
 import org.doProject.common.domain.Project;
 import org.doProject.common.domain.User;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
+
 
 public class UserTests {
     public User mockUser = mock(User.class);
     public Project mockProject = mock(Project.class);
 
+   /**
+    * prøvde noe som ikke funka
+    * @BeforeEach
+    void setUp(){
+        user = new User(1, "oejakobs");
+        mockProject = mock(Project.class);
+    }      **/
+
     @Test
     @DisplayName("Add project to user")
     public void testAddProject() {
-        ArrayList<Project> projects = new ArrayList<>();
-        projects.add(mockProject);
+       ArrayList<Project> projects = new ArrayList<>();
+       projects.add(mockProject);
 
-        // Arrange
+       // Arrange
         when(mockUser.getProjects()).thenReturn(projects);
 
         // Act
@@ -58,7 +70,7 @@ public class UserTests {
         mockUser.removeAllProjects();
 
         // Assert
-        Assertions.assertFalse(mockUser.getProjects().isEmpty());
+        Assertions.assertTrue(mockUser.getProjects().isEmpty());
     }
 
     @Test
