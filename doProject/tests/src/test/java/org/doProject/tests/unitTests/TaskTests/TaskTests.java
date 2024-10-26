@@ -13,75 +13,124 @@ public class TaskTests {
     public Task mockTask = mock(Task.class);
 
     @Test
-    @DisplayName("Update toggle Done value correctly")
-    public void TestToggleDoneValueCorrectly() {
+    @DisplayName("Toggle isFinished from 0 to 1")
+    public void testToggleIsFinishedFromNotFinishedToFinished() {
 
-        // arrange
-        when(mockTask.getIsFinished()).thenReturn(0); // 0 is false
+        // Arrange
+        when(mockTask.getIsFinished()).thenReturn(0); // initial state to not finished
 
-        // act
-        mockTask.toggleDone();
+        // Act
+        mockTask.toggleIsFinished();
 
-        // verify
-        verify(mockTask).toggleDone();
-        when(mockTask.getIsFinished()).thenReturn(1);
+        // Verify
+        verify(mockTask).toggleIsFinished();
+        when(mockTask.getIsFinished()).thenReturn(1); // we expect finished
 
-        // assert
-        int result = mockTask.getIsFinished();
+        // Assert
+        assertEquals(1, mockTask.getIsFinished());    }
 
-        assertEquals(1, result); // 1 is true
+    @Test
+    @DisplayName("Toggle isFinished from 1 to 0")
+    public void testToggleIsFinishedFromFinishedToNotFinished() {
+
+        // Arrange
+        when(mockTask.getIsFinished()).thenReturn(1); // initial state to not finished
+
+        // Act
+        mockTask.toggleIsFinished();
+
+        // Verify
+        verify(mockTask).toggleIsFinished();
+        when(mockTask.getIsFinished()).thenReturn(0); // we expect finished
+
+        // Assert
+        assertEquals(0, mockTask.getIsFinished());
     }
 
     @Test
-    @DisplayName("Update toggle repeat from 0 to 1")
-    public void TestToggleRepeatValueCorrectly() {
-
-        // if 0 -> 1
-        // if 1 -> 0
+    @DisplayName("Toggle isRepeating from 0 to 1")
+    public void testToggleIsRepeatingFromNotRepeatingToRepeating() {
 
         // Arrange
         when(mockTask.getIsRepeating()).thenReturn(0);
 
         // Act
-        mockTask.toggleRepeat();
-        verify(mockTask).toggleRepeat();
+        mockTask.toggleIsRepeating();
+        verify(mockTask).toggleIsRepeating();
         when(mockTask.getIsRepeating()).thenReturn(1);
 
         // Assert
-        int result = mockTask.getIsRepeating();
-        assertEquals(1, result);
+        assertEquals(1, mockTask.getIsRepeating());
     }
 
     @Test
-    @DisplayName("Update toggle repeat from 1 to 0")
-    public void TestToggleRepeatValue() {
+    @DisplayName("Toggle isRepeating from 1 to 0")
+    public void TestToggleIsRepeatingValue() {
         // Arrange
         when(mockTask.getIsRepeating()).thenReturn(1);
 
         // Act
-        mockTask.toggleRepeat();
-        verify(mockTask).toggleRepeat();
+        mockTask.toggleIsRepeating();
+        verify(mockTask).toggleIsRepeating();
         when(mockTask.getIsRepeating()).thenReturn(0);
-        int result = mockTask.getIsRepeating();
+
         // Assert
-        assertEquals(0, result);
+        assertEquals(0, mockTask.getIsRepeating());
     }
 
     @Test
-    @DisplayName("Task With ID")
-    public void TestUpdateDueDate() {
-
+    @DisplayName("Update date by 7 days")
+    public void TestUpdateDueDateWithPositiveDays() {
         // Arrange
-        // We are using a real localdate object to simulate the method
-        when(mockTask.getDueDate()).thenReturn(LocalDate.of(2024, 10, 1));
+        LocalDate initialDueDate = LocalDate.of(2024, 10, 1);
+        when(mockTask.getDueDate()).thenReturn(initialDueDate);
 
         // Act
         mockTask.updateDueDateByDays(7);
-        // We are expecting the duedate to be Localdate.now + 7 days
+
+        // verify the method has been caleld
         verify(mockTask).updateDueDateByDays(7);
-        when(mockTask.getDueDate()).thenReturn(LocalDate.of(2024, 10, 8));
+
+        // We expecting initialduedate to be +7 days now
+        LocalDate expectedDueDate = initialDueDate.plusDays(7);
+        when(mockTask.getDueDate()).thenReturn(expectedDueDate);
 
         // Assert
-
+        assertEquals(expectedDueDate, mockTask.getDueDate());
     }
+
+    @Test
+    @DisplayName("Update date by -3 days")
+    public void testUpdateDueDateWithNegativeDays() {
+
+        // Arrage
+        LocalDate initialDueDate = LocalDate.of(2024, 10, 1);
+        when(mockTask.getDueDate()).thenReturn(initialDueDate);
+
+        // Act
+        mockTask.updateDueDateByDays(-3);
+
+        // Verify
+        verify(mockTask).updateDueDateByDays(-3);
+
+        // Set the expected date after subtracting days
+        LocalDate expectedDueDate = initialDueDate.minusDays(3);
+        when(mockTask.getDueDate()).thenReturn(expectedDueDate);
+
+        // Assert
+        assertEquals(expectedDueDate, mockTask.getDueDate());
+    }
+
+    @Test
+    @DisplayName("Throw exception when due date is set to past date")
+    public void testUpdateDueDateThrowsExceptionForPastDate() {
+        // Arrange
+        // Note: Using a real Task object here because mocks only simulaet behaviour
+        // and do not execute the actual method logic required to trigger exceptions.
+        Task task = new Task("Sample Task", "Description", LocalDate.now(), 0, 0, 0);
+
+        // Act and Assert
+        assertThrows(IllegalArgumentException.class, () -> task.updateDueDateByDays(-1));
+    }
+
 }
