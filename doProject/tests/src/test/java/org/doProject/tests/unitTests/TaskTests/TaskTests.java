@@ -14,16 +14,16 @@ public class TaskTests {
 
     @Test
     @DisplayName("Toggle isFinished from 0 to 1")
-    public void testToggleDoneFromNotFinishedToFinished() {
+    public void testToggleIsFinishedFromNotFinishedToFinished() {
 
         // Arrange
         when(mockTask.getIsFinished()).thenReturn(0); // initial state to not finished
 
         // Act
-        mockTask.toggleDone();
+        mockTask.toggleIsFinished();
 
         // Verify
-        verify(mockTask).toggleDone();
+        verify(mockTask).toggleIsFinished();
         when(mockTask.getIsFinished()).thenReturn(1); // we expect finished
 
         // Assert
@@ -31,16 +31,16 @@ public class TaskTests {
 
     @Test
     @DisplayName("Toggle isFinished from 1 to 0")
-    public void testToggleDoneFromFinishedToNotFinished() {
+    public void testToggleIsFinishedFromFinishedToNotFinished() {
 
         // Arrange
         when(mockTask.getIsFinished()).thenReturn(1); // initial state to not finished
 
         // Act
-        mockTask.toggleDone();
+        mockTask.toggleIsFinished();
 
         // Verify
-        verify(mockTask).toggleDone();
+        verify(mockTask).toggleIsFinished();
         when(mockTask.getIsFinished()).thenReturn(0); // we expect finished
 
         // Assert
@@ -49,14 +49,14 @@ public class TaskTests {
 
     @Test
     @DisplayName("Toggle isRepeating from 0 to 1")
-    public void testToggleRepeatFromNotRepeatingToRepeating() {
+    public void testToggleIsRepeatingFromNotRepeatingToRepeating() {
 
         // Arrange
         when(mockTask.getIsRepeating()).thenReturn(0);
 
         // Act
-        mockTask.toggleRepeat();
-        verify(mockTask).toggleRepeat();
+        mockTask.toggleIsRepeating();
+        verify(mockTask).toggleIsRepeating();
         when(mockTask.getIsRepeating()).thenReturn(1);
 
         // Assert
@@ -65,13 +65,13 @@ public class TaskTests {
 
     @Test
     @DisplayName("Toggle isRepeating from 1 to 0")
-    public void TestToggleRepeatValue() {
+    public void TestToggleIsRepeatingValue() {
         // Arrange
         when(mockTask.getIsRepeating()).thenReturn(1);
 
         // Act
-        mockTask.toggleRepeat();
-        verify(mockTask).toggleRepeat();
+        mockTask.toggleIsRepeating();
+        verify(mockTask).toggleIsRepeating();
         when(mockTask.getIsRepeating()).thenReturn(0);
 
         // Assert
@@ -119,6 +119,18 @@ public class TaskTests {
 
         // Assert
         assertEquals(expectedDueDate, mockTask.getDueDate());
-
     }
+
+    @Test
+    @DisplayName("Throw exception when due date is set to past date")
+    public void testUpdateDueDateThrowsExceptionForPastDate() {
+        // Arrange
+        // Note: Using a real Task object here because mocks only simulaet behaviour
+        // and do not execute the actual method logic required to trigger exceptions.
+        Task task = new Task("Sample Task", "Description", LocalDate.now(), 0, 0, 0);
+
+        // Act and Assert
+        assertThrows(IllegalArgumentException.class, () -> task.updateDueDateByDays(-1));
+    }
+
 }
