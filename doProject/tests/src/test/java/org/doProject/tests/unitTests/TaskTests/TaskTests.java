@@ -68,20 +68,24 @@ public class TaskTests {
     }
 
     @Test
-    @DisplayName("Update due date by specific amount of days")
+    @DisplayName("Update date by 7 days")
     public void TestUpdateDueDate() {
-
         // Arrange
-        // We are using a real localdate object to simulate the method
-        when(mockTask.getDueDate()).thenReturn(LocalDate.of(2024, 10, 1));
+        // set initial date
+        LocalDate initialDueDate = LocalDate.of(2024, 10, 1);
+        when(mockTask.getDueDate()).thenReturn(initialDueDate);
 
         // Act
         mockTask.updateDueDateByDays(7);
-        // We are expecting the duedate to be Localdate.now + 7 days
+
+        // verify the method has been caleld
         verify(mockTask).updateDueDateByDays(7);
-        when(mockTask.getDueDate()).thenReturn(LocalDate.of(2024, 10, 8));
+
+        // We expecting initialduedate to be +7 days now
+        LocalDate expectedDueDate = initialDueDate.plusDays(7);
+        when(mockTask.getDueDate()).thenReturn(expectedDueDate);
 
         // Assert
-
+        assertEquals(expectedDueDate, mockTask.getDueDate(), "The due date should be updated by 7 days.");
     }
 }
