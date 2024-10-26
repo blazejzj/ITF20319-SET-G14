@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import org.doProject.common.domain.Task;
 
 /**
- * The Project class represents a project in the calendar application DO.
- * A Project object contains details such as ID, title, description, tasks and user ID.
- * The class contains methods for handling tasks connected to a project.
+ * Project class represents a project in the calendar application DO.
+ * A Project object contains details such as the project's ID, title, description, a list of tasks and
+ * the ID of the user that the project belongs to.
+ * This class contains methods to manage tasks connected to a project.
  */
-
 public class Project {
     // Variables
     private int projectID;
@@ -17,6 +17,13 @@ public class Project {
     private ArrayList<Task> tasks = new ArrayList<>();
     private int userID;
 
+    /**
+     * Constructs a Project object with a specified ID, title, description and the users ID.
+     * @param projectID ID of the project.
+     * @param projectTitle Title of the project.
+     * @param projectDescription Description of the Project.
+     * @param userID ID of the user that the project belongs to.
+     */
     // Constructor 1
     public Project(int projectID, String projectTitle, String projectDescription, int userID) {
         this.projectID = projectID;
@@ -25,6 +32,12 @@ public class Project {
         this.userID = userID;
     }
 
+    /**
+     * Constructs a Project object with a specified title, description and user ID.
+     * @param projectTitle Title of the project.
+     * @param projectDescription Description of the project.
+     * @param userID ID of the user that the project belongs to.
+     */
     // Constructor 2
     public Project(String projectTitle, String projectDescription, int userID) {
         this.projectTitle = projectTitle;
@@ -48,37 +61,25 @@ public class Project {
 
     // Methods
     /**
-     * Adds a task to the project's list using the following method.
-     * @param task the name of the task.
+     * Adds a specified task to the project's task list.
+     * @param task Task object to add.
      */
     public void addTask(Task task) {
         tasks.add(task);
-        //System.out.println(task.getTitle() + " is added to the project");
     }
 
     /**
-     * Removes a task from the project's list using the following method.
-     * @param task the name of the task.
+     * Removes a specified task from the project's task list.
+     * @param task Task object to remove.
      */
     public void removeTask(Task task) {
         tasks.remove(task);
     }
 
     /**
-     * Checks if a task is completed using the following method.
-     * @param task the name of the task
-     */
-    public void taskIsDone(Task task) {
-        if (tasks.contains(task)) {
-            task.setIsFinished(1);
-        }
-        else task.setIsFinished(0);
-    }
-
-    /**
-     * Searches for a specific task using the following method.
-     * @param title of the task.
-     * @return the task if found in the list, else return null.
+     * Searches for a specific task by title in the list.
+     * @param title Title of the task to search for.
+     * @return the task object if found in the list, else return null.
      */
     public Task findTask(String title) {
         for (Task task : tasks) {
