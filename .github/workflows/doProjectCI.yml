@@ -30,6 +30,6 @@ jobs:
     - name: Build with Maven
       run: |
         cd 
-        doProject/tests/src/test/java/org.doProject.tests
+        doProject/tests/src/test/java/org/doProject/tests
         mvn --batch-mode --update-snapshots verify
 
