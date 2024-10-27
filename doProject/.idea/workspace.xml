@@ -4,116 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ca1fd42-9109-4ca0-bbdc-ea41e4338491" name="Changes" comment="">
+    <list default="true" id="8ee5b58f-c87e-45ec-95d5-6c64d148268b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/org/doProject/common/domain/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/src/main/java/org/doProject/infrastructure/domain/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/src/main/java/org/doProject/infrastructure/domain/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseConnectionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseConnectionTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseLoadDataTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/src/test/java/org/doProject/tests/unitTests/DatabaseTests/DatabaseLoadDataTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/.idea/src.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/main.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Project.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/models/Task.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/java/models/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/main/main.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/java/TaskTests/TaskTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/test/test.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$/.." value="task-setup" />
-      </map>
-    </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
-}</component>
-  <component name="ProjectId" id="2nq5mWU8PDv8yAIkJcNgpfZe2uC" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "JUnit.DatabaseLoadDataTests.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "develop",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/blazejzj/repos/ITF20319-SET-G14/doProject",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
+    "JUnit.ProjectTests.executor": "Run",
+    "git-widget-placeholder": "project-setup",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
 }]]></component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
-      </set>
-    </attachedChunks>
-  </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="0ca1fd42-9109-4ca0-bbdc-ea41e4338491" name="Changes" comment="" />
-      <created>1729687924468</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1729687924468</updated>
-      <workItem from="1729687925468" duration="684000" />
-      <workItem from="1729753711782" duration="1043000" />
-      <workItem from="1729755249685" duration="1760000" />
-      <workItem from="1729772341722" duration="1800000" />
-    </task>
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>
