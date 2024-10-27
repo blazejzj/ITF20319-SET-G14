@@ -1,22 +1,23 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
-import org.doProject.infrastructure.domain.Database;
+import org.doProject.infrastructure.domain.LocalDatabase;
 
+import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class DatabaseDeleteDataTests {
+public class LocalDatabaseDeleteDataTests {
 
-    private Database database;
+    private LocalDatabase localDatabase;
+    private LocalDatabaseConnection localDatabaseConnection;
     private Connection mockConnection;
     private PreparedStatement mockDeleteUserStmt;
     private PreparedStatement mockDeleteProjectsStmt;
@@ -26,7 +27,8 @@ public class DatabaseDeleteDataTests {
 
     @BeforeEach
     public void setUp() throws SQLException {
-        database = spy(new Database("test.db"));
+        localDatabaseConnection = mock(LocalDatabaseConnection.class);
+        localDatabase = spy(new LocalDatabase(localDatabaseConnection));;
 
         mockConnection = mock(Connection.class);
 
@@ -50,7 +52,7 @@ public class DatabaseDeleteDataTests {
         when(mockDeleteProjectStmt.executeUpdate()).thenReturn(1);
         when(mockDeleteTaskStmt.executeUpdate()).thenReturn(1);
 
-        doReturn(mockConnection).when(database).connect();
+        when(localDatabaseConnection.connect()).thenReturn(mockConnection);
     }
 
     // USER DELETION TESTS
@@ -61,7 +63,7 @@ public class DatabaseDeleteDataTests {
 
         when(mockDeleteUserStmt.executeUpdate()).thenReturn(1);
 
-        database.deleteUser(userId);
+        localDatabase.deleteUser(userId);
 
         verify(mockDeleteTasksStmt).setInt(1, userId);
         verify(mockDeleteTasksStmt).executeUpdate();
@@ -80,7 +82,7 @@ public class DatabaseDeleteDataTests {
 
         when(mockDeleteUserStmt.executeUpdate()).thenReturn(0);
 
-        assertThrows(SQLException.class, () -> database.deleteUser(userId));
+        assertThrows(SQLException.class, () -> localDatabase.deleteUser(userId));
 
         verify(mockDeleteTasksStmt).setInt(1, userId);
         verify(mockDeleteTasksStmt).executeUpdate();
@@ -104,7 +106,7 @@ public class DatabaseDeleteDataTests {
         when(mockDeleteTasksStmt.executeUpdate()).thenReturn(2);
 
         // delete this project
-        database.deleteProject(id);
+        localDatabase.deleteProject(id);
 
         // verify the quereis has been executed
         // We can't forget that the deletion of project also should delete all tasks that
@@ -123,7 +125,7 @@ public class DatabaseDeleteDataTests {
 
         when(mockDeleteProjectStmt.executeUpdate()).thenReturn(0);
 
-        assertThrows(SQLException.class, () -> database.deleteProject(projectId));
+        assertThrows(SQLException.class, () -> localDatabase.deleteProject(projectId));
 
         verify(mockDeleteTasksStmt).setInt(1, projectId);
         verify(mockDeleteTasksStmt).executeUpdate();
@@ -142,7 +144,7 @@ public class DatabaseDeleteDataTests {
         when(mockDeleteTaskStmt.executeUpdate()).thenReturn(1);
 
         // delete this task
-        database.deleteTask(id);
+        localDatabase.deleteTask(id);
 
         // verify the query has been exectued
         verify(mockDeleteTaskStmt).setInt(1, id);
@@ -156,7 +158,7 @@ public class DatabaseDeleteDataTests {
 
         when(mockDeleteTaskStmt.executeUpdate()).thenReturn(0);
 
-        assertThrows(SQLException.class, () -> database.deleteTask(taskId));
+        assertThrows(SQLException.class, () -> localDatabase.deleteTask(taskId));
 
         verify(mockDeleteTaskStmt).setInt(1, taskId);
         verify(mockDeleteTaskStmt).executeUpdate();

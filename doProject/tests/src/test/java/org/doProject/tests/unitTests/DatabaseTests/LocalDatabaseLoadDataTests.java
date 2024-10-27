@@ -1,8 +1,9 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
-import org.doProject.infrastructure.domain.Database;
+import org.doProject.infrastructure.domain.LocalDatabase;
 import org.doProject.common.domain.*;
 
+import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,19 +17,20 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doReturn;
 
-public class DatabaseLoadDataTests {
+public class LocalDatabaseLoadDataTests {
 
-    private Database database;
+    private LocalDatabase localDatabase;
+    private LocalDatabaseConnection localDatabaseConnection;
     private Connection mockConnection;
     private PreparedStatement mockPreparedStatement;
     private ResultSet mockResultSet;
     private LocalDate localDate;
 
-
     @BeforeEach
     public void setUp() throws SQLException {
 
-        database = spy(new Database("test.db")); // create a spy
+        localDatabaseConnection = mock(LocalDatabaseConnection.class);
+        localDatabase = spy(new LocalDatabase(localDatabaseConnection)); // create a spy
 
         // Mock connection and prepared statementss
         mockConnection = mock(Connection.class);
@@ -38,7 +40,7 @@ public class DatabaseLoadDataTests {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
 
-        doReturn(mockConnection).when(database).connect();
+        when(localDatabaseConnection.connect()).thenReturn(mockConnection);
     }
 
     // USER LOADING TESTS
@@ -51,7 +53,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.getString("name")).thenReturn("Blazej");
 
         int userId = 1;
-        User user = database.loadUser(userId);
+        User user = localDatabase.loadUser(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
@@ -66,7 +68,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.next()).thenReturn(false);
 
         int userId = 999;
-        User user = database.loadUser(userId);
+        User user = localDatabase.loadUser(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
@@ -85,7 +87,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.getInt("userID")).thenReturn(1); // Same user ID for both projects
 
         int userId = 1;
-        var projects = database.loadUserProjects(userId);
+        var projects = localDatabase.loadUserProjects(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
@@ -105,7 +107,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.next()).thenReturn(false); // no project available
 
         int userId = 999; // non existent user
-        var projects = database.loadUserProjects(userId);
+        var projects = localDatabase.loadUserProjects(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
@@ -130,7 +132,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.getInt("repeatDays")).thenReturn(0).thenReturn(0);
 
         int projectId = 1;
-        var tasks = database.loadTasks(projectId);
+        var tasks = localDatabase.loadTasks(projectId);
 
         verify(mockPreparedStatement).setInt(1, projectId);
 
@@ -161,7 +163,7 @@ public class DatabaseLoadDataTests {
         when(mockResultSet.next()).thenReturn(false); // no tasks available
 
         int projectId = 999; // were assuming this id doesnt have any tasks
-        var tasks = database.loadTasks(projectId);
+        var tasks = localDatabase.loadTasks(projectId);
 
         verify(mockPreparedStatement).setInt(1, projectId);
 

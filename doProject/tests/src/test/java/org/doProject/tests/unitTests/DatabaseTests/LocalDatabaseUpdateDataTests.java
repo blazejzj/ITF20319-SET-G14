@@ -1,7 +1,8 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
-import org.doProject.infrastructure.domain.Database;
+import org.doProject.infrastructure.domain.LocalDatabase;
 
+import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,15 +16,17 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class DatabaseUpdateDataTests {
+public class LocalDatabaseUpdateDataTests {
 
-    private Database database;
+    private LocalDatabase localDatabase;
+    private LocalDatabaseConnection localDatabaseConnection;
     private Connection mockConnection;
     private PreparedStatement mockPreparedStatement;
 
     @BeforeEach
     public void setUp() throws SQLException {
-        database = spy(new Database("test.db"));
+        localDatabaseConnection = mock(LocalDatabaseConnection.class);
+        localDatabase = spy(new LocalDatabase(localDatabaseConnection));
 
         mockConnection = mock(Connection.class);
         mockPreparedStatement = mock(PreparedStatement.class);
@@ -31,7 +34,7 @@ public class DatabaseUpdateDataTests {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeUpdate()).thenReturn(1); // expect atleast 1 row to be affected
 
-        doReturn(mockConnection).when(database).connect();
+        doReturn(mockConnection).when(localDatabaseConnection).connect();
     }
 
     // USER UPDATE TESTS
@@ -42,7 +45,7 @@ public class DatabaseUpdateDataTests {
         String newName = "Amy Stake"; // pun intended
 
         // execute the query
-        database.updateUser(id, newName);
+        localDatabase.updateUser(id, newName);
 
         // verify query has been executed
         verify(mockConnection).prepareStatement("UPDATE Users SET name = ? WHERE id = ?");
@@ -60,7 +63,7 @@ public class DatabaseUpdateDataTests {
         // mock the executeUpdate to return 0
         when(mockPreparedStatement.executeUpdate()).thenReturn(0);
 
-        assertThrows(SQLException.class, () -> database.updateUser(id, newName));
+        assertThrows(SQLException.class, () -> localDatabase.updateUser(id, newName));
 
         // verify query has been executed
         verify(mockConnection).prepareStatement("UPDATE Users SET name = ? WHERE id = ?");
@@ -77,7 +80,7 @@ public class DatabaseUpdateDataTests {
         String newTitle = "Updated Project Title";
         String newDescription = "Updated Project Description";
 
-        database.updateProject(projectId, newTitle, newDescription);
+        localDatabase.updateProject(projectId, newTitle, newDescription);
 
         verify(mockConnection).prepareStatement("UPDATE Projects SET title = ?, description = ? WHERE id = ?");
         verify(mockPreparedStatement).setString(1, newTitle);
@@ -96,7 +99,7 @@ public class DatabaseUpdateDataTests {
         // mock to return 0
         when(mockPreparedStatement.executeUpdate()).thenReturn(0);
 
-        assertThrows(SQLException.class, () -> database.updateProject(projectId, newTitle, newDescription));
+        assertThrows(SQLException.class, () -> localDatabase.updateProject(projectId, newTitle, newDescription));
 
         verify(mockConnection).prepareStatement("UPDATE Projects SET title = ?, description = ? WHERE id = ?");
         verify(mockPreparedStatement).setString(1, newTitle);
@@ -121,7 +124,7 @@ public class DatabaseUpdateDataTests {
         int isRepeating = 0;
         int repeatDays = 0;
 
-        database.updateTask(taskId, newTitle, newDescription, newDueDate, isFinished, isRepeating, repeatDays);
+        localDatabase.updateTask(taskId, newTitle, newDescription, newDueDate, isFinished, isRepeating, repeatDays);
 
         verify(mockConnection).prepareStatement("UPDATE Tasks SET title = ?, description = ?, dueDate = ?, isFinished = ?, isRepeating = ?, repeatDays = ? WHERE id = ?");
         verify(mockPreparedStatement).setString(1, newTitle);
@@ -148,7 +151,7 @@ public class DatabaseUpdateDataTests {
         // mock to retrun 0
         when(mockPreparedStatement.executeUpdate()).thenReturn(0);
 
-        assertThrows(SQLException.class, () -> database.updateTask(taskId, newTitle, newDescription, newDueDate, isFinished, isRepeating, repeatDays));
+        assertThrows(SQLException.class, () -> localDatabase.updateTask(taskId, newTitle, newDescription, newDueDate, isFinished, isRepeating, repeatDays));
 
         verify(mockConnection).prepareStatement("UPDATE Tasks SET title = ?, description = ?, dueDate = ?, isFinished = ?, isRepeating = ?, repeatDays = ? WHERE id = ?");
         verify(mockPreparedStatement).setString(1, newTitle);
