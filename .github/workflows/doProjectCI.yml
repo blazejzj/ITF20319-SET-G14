@@ -29,5 +29,5 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: |
-        cd doProject  # Navigate to the project root
-        mvn --batch-mode --update-snapshots verify -f tests/pom.xml
+        cd doProject
+        mvn --batch-mode clean install
