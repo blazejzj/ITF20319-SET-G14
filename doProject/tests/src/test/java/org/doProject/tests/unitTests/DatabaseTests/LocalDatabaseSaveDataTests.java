@@ -1,7 +1,8 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
-import org.doProject.infrastructure.domain.Database;
+import org.doProject.infrastructure.domain.LocalDatabase;
 
+import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,9 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
-public class DatabaseSaveDataTests {
+public class LocalDatabaseSaveDataTests {
 
-    private Database database;
+    private LocalDatabase localDatabase;
+    private LocalDatabaseConnection localDatabaseConnection;
     private Connection mockConnection;
     private PreparedStatement mockPreparedStatement;
 
@@ -32,7 +34,8 @@ public class DatabaseSaveDataTests {
     @BeforeEach
     public void setUp() throws SQLException {
 
-        database = spy(new Database("test.db")); // create a spy
+        localDatabaseConnection = mock(LocalDatabaseConnection.class);
+        localDatabase = spy(new LocalDatabase(localDatabaseConnection)); // create a spy
 
         // Mock connection and prepared statementss
         mockConnection = mock(Connection.class);
@@ -47,7 +50,7 @@ public class DatabaseSaveDataTests {
         // Override connect method in database
         // prevent the actual db from opening -> instead use mock connection
         // that allows ut o test logic and stuff without affecting real db
-        doReturn(mockConnection).when(database).connect();
+        when(localDatabaseConnection.connect()).thenReturn(mockConnection);
     }
 
     // USER CREATION TEST
@@ -57,7 +60,7 @@ public class DatabaseSaveDataTests {
         ResultSet mockResultSet = createMockResultSetForGeneratedKeys(1);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
 
-        database.saveUser("Blazej");
+        localDatabase.saveUser("Blazej");
 
         verify(mockConnection).prepareStatement(
                 "INSERT INTO Users (name) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS
@@ -77,8 +80,8 @@ public class DatabaseSaveDataTests {
                 .thenReturn(mockResultSet1)
                 .thenReturn(mockResultSet2);
 
-        int userID1 = database.saveUser("Blazej");
-        int userID2 = database.saveUser("Kamilla");
+        int userID1 = localDatabase.saveUser("Blazej");
+        int userID2 = localDatabase.saveUser("Kamilla");
 
         assertNotEquals(userID1, userID2);
     }
@@ -94,7 +97,7 @@ public class DatabaseSaveDataTests {
 
         // id automatically generates, hence we make a project assigning an id
         // 1arg = title, 2arg = description, 3arg = userid holding the project
-        int projectId = database.saveProject("ProjectName", "ProjectDescription", 1);
+        int projectId = localDatabase.saveProject("ProjectName", "ProjectDescription", 1);
 
         verify(mockPreparedStatement).setString(1, "ProjectName");
         verify(mockPreparedStatement).setString(2, "ProjectDescription");
@@ -115,7 +118,7 @@ public class DatabaseSaveDataTests {
 
         // id automatically generates, hence we make a task assigning an id
         // 1arg = title, 2arg = description, 3arg = dueDate, 4arg = isFinished, 5arg = projectId
-        int taskId = database.saveTask("TaskName", "TaskDescription", mockLocalDate, 0, 1, 7, 1);
+        int taskId = localDatabase.saveTask("TaskName", "TaskDescription", mockLocalDate, 0, 1, 7, 1);
 
         verify(mockPreparedStatement).setString(1, "TaskName");
         verify(mockPreparedStatement).setString(2, "TaskDescription");

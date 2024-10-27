@@ -1,7 +1,8 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
-import org.doProject.infrastructure.domain.Database;
+import org.doProject.infrastructure.domain.LocalDatabase;
 
+import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,16 +15,18 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
-public class DatabaseTablesTests {
+public class LocalDatabaseTablesTests {
 
-    Database database;
-    Connection mockConnection;
-    Statement mockStatement;
+    private LocalDatabase localDatabase;
+    private LocalDatabaseConnection localDatabaseConnection;
+    private Connection mockConnection;
+    private Statement mockStatement;
 
     @BeforeEach
     public void setUp() throws SQLException {
         // Spy on db instance
-        database = spy(new Database("test.db"));
+        localDatabaseConnection = mock(LocalDatabaseConnection.class);
+        localDatabase = spy(new LocalDatabase(localDatabaseConnection));
 
         // mock the connection and statemnt objects from SQL
         mockConnection = mock(Connection.class);
@@ -31,13 +34,13 @@ public class DatabaseTablesTests {
 
         // return mocks
         when(mockConnection.createStatement()).thenReturn(mockStatement);
-        doReturn(mockConnection).when(database).connect();
+        doReturn(mockConnection).when(localDatabaseConnection).connect();
     }
 
     @Test
     @DisplayName("Tables (Projects, User, Tasks) are created if not already")
     public void testCreateTablesExecutesSQL() throws SQLException {
-        database.createTables();
+        localDatabase.createTables();
 
         verify(mockConnection).createStatement();
         verify(mockStatement, times(3)).execute(anyString());
@@ -46,7 +49,7 @@ public class DatabaseTablesTests {
     @Test
     @DisplayName("Projects table has all the necessary columns")
     public void testProjectTableAllColumnsExist() throws SQLException {
-        database.createTables();
+        localDatabase.createTables();
 
         // verify the columns are there
         verify(mockStatement).execute(
@@ -62,7 +65,7 @@ public class DatabaseTablesTests {
     @Test
     @DisplayName("Tasks table has all the necessary columns")
     public void testTasksTableAllColumnsExist() throws SQLException {
-        database.createTables();
+        localDatabase.createTables();
 
         // verify the columns are there
         verify(mockStatement).execute(
@@ -82,7 +85,7 @@ public class DatabaseTablesTests {
     @Test
     @DisplayName("User table has all the necessary columns")
     public void testUserTableAllColumnsExist() throws SQLException {
-        database.createTables();
+        localDatabase.createTables();
 
         // veruify the columns are there
         verify(mockStatement).execute(

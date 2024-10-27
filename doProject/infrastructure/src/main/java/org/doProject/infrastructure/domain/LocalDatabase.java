@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.*;
 
-public class Database {
-
-    // Variables
-    private final String dbName;
-    private final String dbURL = "jdbc:sqlite:";
+/**
+ * Provides operations for managing and interacting with database tables for Users, Projects, and Tasks.
+ * Uses the LocalDatabaseConnection to handle database connections and executes SQL statements to manage data.
+ * Supports CRUD operations
+ */
+public class LocalDatabase {
 
     // TABLE CREATION QUERIES
     private static final List<String> CREATE_TABLE_STATEMENTS = List.of(
@@ -59,32 +60,40 @@ public class Database {
     private static final String QUERY_DELETE_TASKS_BY_USERID = "DELETE FROM Tasks WHERE project_id IN (SELECT id FROM Projects WHERE userID = ?)";
     private static final String QUERY_UPDATE_TASK = "UPDATE Tasks SET title = ?, description = ?, dueDate = ?, isFinished = ?, isRepeating = ?, repeatDays = ? WHERE id = ?";
 
+    // CONNECTION OBJECT
+    private final LocalDatabaseConnection connectionHandler;
+
 
     // Constructor/s
-    public Database(String dbName) {
-        this.dbName = dbName;
+    /**
+     * Constructs a LocalDatabase using the specified LocalDatabaseConnection.
+     * @param connectionHandler the connection handler that provides database connections.
+     */
+    public LocalDatabase(LocalDatabaseConnection connectionHandler) {
+        this.connectionHandler = connectionHandler;
     }
-
-    // Getters/Setters
-    public String getDbURL() {return dbURL + dbName;}
 
     // Methods
-    public Connection connect() throws SQLException {
-        Connection connect = DriverManager.getConnection(getDbURL());
-        try(Statement statement = connect.createStatement()) {
-            statement.execute("PRAGMA foreign_keys = ON;");
-        }
-        return connect;
-    }
 
+    /**
+     * Creates the necessary tables -> Projects, Tasks, Users in the database if they do not already exist.
+     * @throws SQLException if a database access error occurs.
+     */
     public void createTables() throws SQLException {
-        try (Connection connection = connect(); Statement statement = connection.createStatement()) {
+        try (Connection connection = connectionHandler.connect(); Statement statement = connection.createStatement()) {
             for (String sqlQuery : CREATE_TABLE_STATEMENTS) {
                 statement.execute(sqlQuery);
             }
         }
     }
 
+
+    /**
+     * Retrieves the generated key (ID) after insert.
+     * @param preparedStatement the statement used for the insert.
+     * @return the generated key as an integer.
+     * @throws SQLException if no key was generated or a database access error occurs.
+     */
     public int getGeneratedKey(PreparedStatement preparedStatement) throws SQLException {
         try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
@@ -97,8 +106,14 @@ public class Database {
 
     // USER METHODS
 
+    /**
+     * Saves a new user to the Users table.
+     * @param name is the name of the user.
+     * @return the generated user ID.
+     * @throws SQLException if a database access error occurs.
+     */
     public int saveUser(String name) throws SQLException {
-        try (PreparedStatement preparedStatement = connect()
+        try (PreparedStatement preparedStatement = connectionHandler.connect()
                 .prepareStatement(QUERY_INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
@@ -106,8 +121,14 @@ public class Database {
         }
     }
 
+    /**
+     * Loads a user by their ID from the Users table.
+     * @param userId the ID of the user to load.
+     * @return the User object if found, or null if user is not found.
+     * @throws SQLException if a database access error occurs.
+     */
     public User loadUser(int userId) throws SQLException {
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_USER_BY_ID)) {
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -116,12 +137,18 @@ public class Database {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 return new User(id, name);
-            } else { return null; } // if no user with "userId" exists return null
+            } else { return null; }
         }
     }
 
+    /**
+     * Updates an existing users name in the Users table.
+     * @param id the ID of the user to update.
+     * @param newName the new name for the user.
+     * @throws SQLException if the update fails or no user is found with the given ID.
+     */
     public void updateUser(int id, String newName) throws SQLException {
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_USER)) {
             preparedStatement.setString(1, newName);
             preparedStatement.setInt(2, id);
@@ -133,10 +160,15 @@ public class Database {
         }
     }
 
+    /**
+     * Deletes a user from the database together with their associated projects and tasks.
+     * @param userId the ID of the user to delete.
+     * @throws SQLException if no user with the specified ID exists.
+     */
     public void deleteUser(int userId) throws SQLException {
         // The deletion of a certain user is much more complicated than probably
         // anticipated because we have to delete Tasks, Projects, and then the user itself.
-        try (Connection connection = connect()) {
+        try (Connection connection = connectionHandler.connect()) {
 
             // DELETE TASKS
             try (PreparedStatement deleteTasksStatement = connection.prepareStatement(QUERY_DELETE_TASKS_BY_USERID)) {
@@ -163,8 +195,17 @@ public class Database {
     }
 
     // PROJECT METHODS
+
+    /**
+     * Inserts a new project for a specified user into the Projects table.
+     * @param title the title of the project.
+     * @param description the description of the project.
+     * @param userId the ID of the user associated with the project.
+     * @return the generated project ID.
+     * @throws SQLException if a database access error occurs.
+     */
     public int saveProject(String title, String description, int userId) throws SQLException {
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SAVE_PROJECT, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, title);
                 preparedStatement.setString(2, description);
@@ -174,10 +215,16 @@ public class Database {
         }
     }
 
+    /**
+     * Retrieves all projects associated with a specific user ID from the Projects table.
+     * @param userId the ID of the user whose projects are to be retrieved.
+     * @return a list of Project objects associated with the user.
+     * @throws SQLException if a database access error occurs.
+     */
     public ArrayList<Project> loadUserProjects(int userId) throws SQLException {
         ArrayList<Project> projects = new ArrayList<>(); // temp list to store projetcs
 
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_PROJECTS_BY_USERID)) {
 
                 preparedStatement.setInt(1, userId);
@@ -195,8 +242,13 @@ public class Database {
         return projects;
     }
 
+    /**
+     * Deletes a project from the database, together with any associated tasks.
+     * @param projectID the ID of the project to delete.
+     * @throws SQLException if the project does not exist or a database access error occurs.
+     */
     public void deleteProject(int projectID) throws SQLException {
-        try (Connection connection = connect()) {
+        try (Connection connection = connectionHandler.connect()) {
             try (PreparedStatement deleteTasksStatement = connection.prepareStatement(QUERY_DELETE_TASKS_BY_PROJECT);
                  PreparedStatement deleteProjectStatement = connection.prepareStatement(QUERY_DELETE_PROJECT)) {
 
@@ -213,10 +265,15 @@ public class Database {
         }
     }
 
-    // were including id on purpose, to get even more control over the object
-    // project is going to have an id anyways, but incase we want to update it we have teh possiblity
+    /**
+     * Updates an existing projects title and description.
+     * @param projectId the ID of the project to update.
+     * @param newTitle the new title for the project.
+     * @param newDescription the new description for the project.
+     * @throws SQLException if the update fails or no project is found with the given ID.
+     */
     public void updateProject(int projectId, String newTitle, String newDescription) throws SQLException {
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_PROJECT)) {
             preparedStatement.setString(1, newTitle);
             preparedStatement.setString(2, newDescription);
@@ -230,8 +287,21 @@ public class Database {
     }
 
     // TASK METHODS
+
+    /**
+     * Inserts a new task associated with a specific project into the Tasks table.
+     * @param title the title of the task.
+     * @param description the description of the task.
+     * @param dueDate the due date for the task.
+     * @param isFinished whether the task is marked as finished.
+     * @param isRepeating whether the task is set to repeat.
+     * @param repeatDays the number of days between task repetitions.
+     * @param projectId the ID of the project associated with the task.
+     * @return the generated task ID.
+     * @throws SQLException if a database access error occurs.
+     */
     public int saveTask(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays, int projectId) throws SQLException {
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SAVE_TASK, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, title);
             preparedStatement.setString(2, description);
@@ -245,10 +315,16 @@ public class Database {
         }
     }
 
+    /**
+     * Retrieves all tasks associated with a specific project ID from the Tasks table.
+     * @param projectId the ID of the project whose tasks are to be retrieved.
+     * @return a list of Task objects associated with the project.
+     * @throws SQLException if a database access error occurs.
+     */
     public ArrayList<Task> loadTasks(int projectId) throws SQLException {
         ArrayList<Task> tasks = new ArrayList<>(); // temp list to store tasks
 
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_TASKS_BY_PROJECT)) {
                  preparedStatement.setInt(1, projectId);
                  ResultSet resultSet = preparedStatement.executeQuery();
@@ -269,8 +345,13 @@ public class Database {
         return tasks;
     }
 
+    /**
+     * Deletes a task from the Tasks table by its ID.
+     * @param taskID the ID of the task to delete.
+     * @throws SQLException if no task with the specified ID exists or if a database access error occurs.
+     */
     public void deleteTask(int taskID) throws SQLException {
-        try (Connection connection = connect(); PreparedStatement preparedStatement = connection.prepareStatement(QUERY_DELETE_TASK)) {
+        try (Connection connection = connectionHandler.connect(); PreparedStatement preparedStatement = connection.prepareStatement(QUERY_DELETE_TASK)) {
             preparedStatement.setInt(1, taskID);
             int affectedRows = preparedStatement.executeUpdate();
 
@@ -280,9 +361,19 @@ public class Database {
         }
     }
 
-    // same idea as the project when it comes to the updating the id
+    /**
+     * Updates an existing tasks title, description, due date, and repetition settings.
+     * @param taskId the ID of the task to update.
+     * @param newTitle the new title for the task.
+     * @param newDescription the new description for the task.
+     * @param newDueDate the new due date for the task.
+     * @param isFinished the new finished status for the task.
+     * @param isRepeating the new repetition status for the task.
+     * @param repeatDays the new number of days for task repetition.
+     * @throws SQLException if the update fails or no task is found with the given ID.
+     */
     public void updateTask(int taskId, String newTitle, String newDescription, LocalDate newDueDate, int isFinished, int isRepeating, int repeatDays) throws SQLException {
-        try (Connection connection = connect();
+        try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_TASK)) {
             preparedStatement.setString(1, newTitle);
             preparedStatement.setString(2, newDescription);
