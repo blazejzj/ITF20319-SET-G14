@@ -14,79 +14,68 @@ import static org.mockito.Mockito.*;
 
 
 public class UserTests {
-    public User mockUser = mock(User.class);
-    public Project mockProject = mock(Project.class);
 
-   /**
-    * prøvde noe som ikke funka
-    * @BeforeEach
+    private User user;
+    private Project project;
+
+    /**
+     * We are going to be setting up the User and Project objects before each test.
+     * We are going to use a real User object here because we want to test actual list
+     * operations and state changes within the User object instance. Mocks would not be able
+     * to execute the actual methods, making it harder to validate and test various of changes.
+     */
+    @BeforeEach
     void setUp(){
         user = new User(1, "oejakobs");
-        mockProject = mock(Project.class);
-    }      **/
+        project = new Project(1,"Oda's Project", "Simple, yet powerful project", 1);
+    }
 
     @Test
     @DisplayName("Add project to user")
     public void testAddProject() {
-       ArrayList<Project> projects = new ArrayList<>();
-       projects.add(mockProject);
-
-       // Arrange
-        when(mockUser.getProjects()).thenReturn(projects);
-
         // Act
-        mockUser.addProject(mockProject);
+        user.addProject(project);
 
         // Assert
-        Assertions.assertTrue(mockUser.getProjects().contains(mockProject));
+        Assertions.assertTrue(user.getProjects().contains(project));
     }
 
     @Test
     @DisplayName("Remove a project from user")
     public void testRemoveProject() {
-        ArrayList<Project> projects = new ArrayList<>();
-        projects.add(mockProject);
-
         // Arrange
-        when(mockUser.getProjects()).thenReturn(projects);
+        user.addProject(project);
 
         // Act
-        mockUser.removeProject(mockProject);
+        user.removeProject(project);
 
         // Assert
-        Assertions.assertFalse(mockUser.getProjects().contains(mockProject));
+        Assertions.assertFalse(user.getProjects().contains(project));
     }
 
     @Test
     @DisplayName("Remove all projects from user")
     public void testRemoveAllProjects() {
-        ArrayList<Project> projects = new ArrayList<>();
-        projects.add(mockProject);
-
         // Arrange
-        when(mockUser.getProjects()).thenReturn(projects);
+        user.addProject(project);
 
         // Act
-        mockUser.removeAllProjects();
+        user.removeAllProjects();
 
         // Assert
-        Assertions.assertTrue(mockUser.getProjects().isEmpty());
+        Assertions.assertTrue(user.getProjects().isEmpty());
     }
 
     @Test
     @DisplayName("Remove project by ID")
     public void testRemoveProjectById() {
-        ArrayList<Project> projects = new ArrayList<>();
-        projects.add(mockProject);
-
         // Arrange
-        when(mockUser.getProjects()).thenReturn(projects);
-        when(mockProject.getId()).thenReturn(1);
+        user.addProject(project);
 
         // Act
-        mockUser.removeProjectById(1);
+        user.removeProjectById(1);
 
         // Assert
-        Assertions.assertFalse(mockUser.getProjects().contains(mockProject));
+        Assertions.assertFalse(user.getProjects().contains(project));
     }
 }
