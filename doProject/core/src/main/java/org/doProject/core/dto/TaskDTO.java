@@ -3,7 +3,12 @@ package org.doProject.core.dto;
 import java.time.LocalDate;
 
 
-
+/**
+ * TaskDTO is a Data Transfer Object for handling task information.
+ * This DTO includes Task ID, title, description, completion status, repeat status, due date,
+ * and repeat "interval" in days.
+ * It is used to transfer task data between different parts of the app.
+ */
 public class TaskDTO {
 
     private int taskID;
@@ -15,6 +20,17 @@ public class TaskDTO {
     private int repeatDays;
 
 
+    /**
+     * Create a TaskDTO without an ID, useful when a task ID is not yet assigned.
+     * Assigning the ID is normally going to occur within the database.
+     *
+     * @param title       The title of the task.
+     * @param description A brief description of the task.
+     * @param dueDate     The due date of the task.
+     * @param isFinished Indicator if task is finished. (0 -> False, 1 -> True)
+     * @param isRepeating Indicator if task is set to repeat. (0 -> False, 1 -> True)
+     * @param repeatDays Number of days after which the task repeats if isRepeating set to 1
+     */
     public TaskDTO(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays) {
         this.title = title;
         this.description = description;
@@ -24,6 +40,17 @@ public class TaskDTO {
         this.repeatDays = repeatDays;
     }
 
+    /**
+     * Creates a TaskDTO with all details, now including the task ID.
+     *
+     * @param id          The unique identifier of the task.
+     * @param title       The title of the task.
+     * @param description A brief description of the task.
+     * @param dueDate     The due date of the task.
+     * @param isFinished Indicator if task is finished. (0 -> False, 1 -> True)
+     * @param isRepeating Indicator if task is set to repeat. (0 -> False, 1 -> True)
+     * @param repeatDays Number of days after which the task repeats if isRepeating set to 1
+     */
     public TaskDTO(int id, String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays) {
         this.taskID = id;
         this.title = title;
