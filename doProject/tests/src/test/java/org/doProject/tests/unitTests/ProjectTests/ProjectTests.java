@@ -3,8 +3,8 @@ package org.doProject.tests.unitTests.ProjectTests;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.doProject.common.domain.Project;
-import org.doProject.common.domain.Task;
+import org.doProject.core.domain.Project;
+import org.doProject.core.domain.Task;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;

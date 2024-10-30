@@ -1,7 +1,7 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
+import org.doProject.core.domain.User;
 import org.doProject.infrastructure.domain.LocalDatabase;
-import org.doProject.common.domain.*;
 
 import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 import org.junit.jupiter.api.BeforeEach;

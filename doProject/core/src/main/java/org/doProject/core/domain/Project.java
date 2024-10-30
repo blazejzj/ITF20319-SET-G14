@@ -1,7 +1,6 @@
-package org.doProject.common.domain;
+package org.doProject.core.domain;
 
 import java.util.ArrayList;
-import org.doProject.common.domain.Task;
 
 /**
  * Project class represents a project in the calendar application DO.

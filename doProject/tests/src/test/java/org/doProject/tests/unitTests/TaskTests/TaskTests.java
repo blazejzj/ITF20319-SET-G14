@@ -1,6 +1,6 @@
 package org.doProject.tests.unitTests.TaskTests;
 
-import org.doProject.common.domain.Task;
+import org.doProject.core.domain.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
