@@ -1,4 +1,4 @@
-package org.doProject.common.domain;
+package org.doProject.core.domain;
 
 import java.time.LocalDate;
 

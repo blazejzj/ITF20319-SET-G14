@@ -1,16 +1,12 @@
 package org.doProject.tests.unitTests.UserTests;
 
-import org.doProject.common.domain.Project;
-import org.doProject.common.domain.User;
+import org.doProject.core.domain.Project;
+import org.doProject.core.domain.User;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
-import static org.mockito.Mockito.*;
 
 
 public class UserTests {

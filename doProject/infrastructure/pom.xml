@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>org.doProject</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
