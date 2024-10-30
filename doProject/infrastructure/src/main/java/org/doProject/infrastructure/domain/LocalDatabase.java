@@ -1,6 +1,9 @@
 package org.doProject.infrastructure.domain;
 
 import org.doProject.core.domain.*;
+import org.doProject.core.port.ProjectRepository;
+import org.doProject.core.port.TaskRepository;
+import org.doProject.core.port.UserRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,11 +11,12 @@ import java.util.List;
 import java.time.*;
 
 /**
- * Provides operations for managing and interacting with database tables for Users, Projects, and Tasks.
+ * Implementation of the repository interfaces for managing and interacting with the database tables for Users, Projects, and Tasks.
+ * Acts as an "adapter" in our hexa structure, which is going to act as a bridge between the core
+ * application logic and with the SQLite database.
  * Uses the LocalDatabaseConnection to handle database connections and executes SQL statements to manage data.
- * Supports CRUD operations
  */
-public class LocalDatabase {
+public class LocalDatabase implements UserRepository, ProjectRepository, TaskRepository {
 
     // TABLE CREATION QUERIES
     private static final List<String> CREATE_TABLE_STATEMENTS = List.of(
@@ -41,7 +45,7 @@ public class LocalDatabase {
 
     // USER TABLE QUERIES
     private static final String QUERY_INSERT_USER = "INSERT INTO Users (name) VALUES (?)";
-    private static final String QUERY_SELECT_USER_BY_ID = "SELECT name FROM Users WHERE id = ?";
+    private static final String QUERY_SELECT_USER_BY_ID = "SELECT id, name FROM Users WHERE id = ?";
     private static final String QUERY_UPDATE_USER = "UPDATE Users SET name = ? WHERE id = ?";
     private static final String QUERY_DELETE_USER = "DELETE FROM Users WHERE id = ?";
 
@@ -94,7 +98,7 @@ public class LocalDatabase {
      * @return the generated key as an integer.
      * @throws SQLException if no key was generated or a database access error occurs.
      */
-    public int getGeneratedKey(PreparedStatement preparedStatement) throws SQLException {
+    private int getGeneratedKey(PreparedStatement preparedStatement) throws SQLException {
         try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
@@ -106,12 +110,7 @@ public class LocalDatabase {
 
     // USER METHODS
 
-    /**
-     * Saves a new user to the Users table.
-     * @param name is the name of the user.
-     * @return the generated user ID.
-     * @throws SQLException if a database access error occurs.
-     */
+    @Override
     public int saveUser(String name) throws SQLException {
         try (PreparedStatement preparedStatement = connectionHandler.connect()
                 .prepareStatement(QUERY_INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -121,12 +120,7 @@ public class LocalDatabase {
         }
     }
 
-    /**
-     * Loads a user by their ID from the Users table.
-     * @param userId the ID of the user to load.
-     * @return the User object if found, or null if user is not found.
-     * @throws SQLException if a database access error occurs.
-     */
+    @Override
     public User loadUser(int userId) throws SQLException {
         try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_USER_BY_ID)) {
@@ -141,12 +135,7 @@ public class LocalDatabase {
         }
     }
 
-    /**
-     * Updates an existing users name in the Users table.
-     * @param id the ID of the user to update.
-     * @param newName the new name for the user.
-     * @throws SQLException if the update fails or no user is found with the given ID.
-     */
+    @Override
     public void updateUser(int id, String newName) throws SQLException {
         try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_USER)) {
@@ -160,11 +149,7 @@ public class LocalDatabase {
         }
     }
 
-    /**
-     * Deletes a user from the database together with their associated projects and tasks.
-     * @param userId the ID of the user to delete.
-     * @throws SQLException if no user with the specified ID exists.
-     */
+    @Override
     public void deleteUser(int userId) throws SQLException {
         // The deletion of a certain user is much more complicated than probably
         // anticipated because we have to delete Tasks, Projects, and then the user itself.
@@ -196,14 +181,7 @@ public class LocalDatabase {
 
     // PROJECT METHODS
 
-    /**
-     * Inserts a new project for a specified user into the Projects table.
-     * @param title the title of the project.
-     * @param description the description of the project.
-     * @param userId the ID of the user associated with the project.
-     * @return the generated project ID.
-     * @throws SQLException if a database access error occurs.
-     */
+    @Override
     public int saveProject(String title, String description, int userId) throws SQLException {
         try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SAVE_PROJECT, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -215,12 +193,7 @@ public class LocalDatabase {
         }
     }
 
-    /**
-     * Retrieves all projects associated with a specific user ID from the Projects table.
-     * @param userId the ID of the user whose projects are to be retrieved.
-     * @return a list of Project objects associated with the user.
-     * @throws SQLException if a database access error occurs.
-     */
+    @Override
     public ArrayList<Project> loadUserProjects(int userId) throws SQLException {
         ArrayList<Project> projects = new ArrayList<>(); // temp list to store projetcs
 
@@ -242,11 +215,7 @@ public class LocalDatabase {
         return projects;
     }
 
-    /**
-     * Deletes a project from the database, together with any associated tasks.
-     * @param projectID the ID of the project to delete.
-     * @throws SQLException if the project does not exist or a database access error occurs.
-     */
+    @Override
     public void deleteProject(int projectID) throws SQLException {
         try (Connection connection = connectionHandler.connect()) {
             try (PreparedStatement deleteTasksStatement = connection.prepareStatement(QUERY_DELETE_TASKS_BY_PROJECT);
@@ -265,13 +234,7 @@ public class LocalDatabase {
         }
     }
 
-    /**
-     * Updates an existing projects title and description.
-     * @param projectId the ID of the project to update.
-     * @param newTitle the new title for the project.
-     * @param newDescription the new description for the project.
-     * @throws SQLException if the update fails or no project is found with the given ID.
-     */
+    @Override
     public void updateProject(int projectId, String newTitle, String newDescription) throws SQLException {
         try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_PROJECT)) {
@@ -288,18 +251,7 @@ public class LocalDatabase {
 
     // TASK METHODS
 
-    /**
-     * Inserts a new task associated with a specific project into the Tasks table.
-     * @param title the title of the task.
-     * @param description the description of the task.
-     * @param dueDate the due date for the task.
-     * @param isFinished whether the task is marked as finished.
-     * @param isRepeating whether the task is set to repeat.
-     * @param repeatDays the number of days between task repetitions.
-     * @param projectId the ID of the project associated with the task.
-     * @return the generated task ID.
-     * @throws SQLException if a database access error occurs.
-     */
+    @Override
     public int saveTask(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays, int projectId) throws SQLException {
         try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SAVE_TASK, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -315,12 +267,7 @@ public class LocalDatabase {
         }
     }
 
-    /**
-     * Retrieves all tasks associated with a specific project ID from the Tasks table.
-     * @param projectId the ID of the project whose tasks are to be retrieved.
-     * @return a list of Task objects associated with the project.
-     * @throws SQLException if a database access error occurs.
-     */
+    @Override
     public ArrayList<Task> loadTasks(int projectId) throws SQLException {
         ArrayList<Task> tasks = new ArrayList<>(); // temp list to store tasks
 
@@ -345,11 +292,7 @@ public class LocalDatabase {
         return tasks;
     }
 
-    /**
-     * Deletes a task from the Tasks table by its ID.
-     * @param taskID the ID of the task to delete.
-     * @throws SQLException if no task with the specified ID exists or if a database access error occurs.
-     */
+    @Override
     public void deleteTask(int taskID) throws SQLException {
         try (Connection connection = connectionHandler.connect(); PreparedStatement preparedStatement = connection.prepareStatement(QUERY_DELETE_TASK)) {
             preparedStatement.setInt(1, taskID);
@@ -361,17 +304,7 @@ public class LocalDatabase {
         }
     }
 
-    /**
-     * Updates an existing tasks title, description, due date, and repetition settings.
-     * @param taskId the ID of the task to update.
-     * @param newTitle the new title for the task.
-     * @param newDescription the new description for the task.
-     * @param newDueDate the new due date for the task.
-     * @param isFinished the new finished status for the task.
-     * @param isRepeating the new repetition status for the task.
-     * @param repeatDays the new number of days for task repetition.
-     * @throws SQLException if the update fails or no task is found with the given ID.
-     */
+    @Override
     public void updateTask(int taskId, String newTitle, String newDescription, LocalDate newDueDate, int isFinished, int isRepeating, int repeatDays) throws SQLException {
         try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_UPDATE_TASK)) {
