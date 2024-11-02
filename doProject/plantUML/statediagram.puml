@@ -1,24 +1,19 @@
 @startuml
 'https://plantuml.com/state-diagram
 
-scale 350 width
-[*] --> NotShooting
+[*] --> Initialized
 
-state NotShooting {
-  [*] --> Idle
-  Idle --> Configuring : EvConfig
-  Configuring --> Idle : EvConfig
-}
+Initialized --> ProjectAdded : addProject(Project project)
 
-state Configuring {
-  [*] --> NewValueSelection
-  NewValueSelection --> NewValuePreview : EvNewValue
-  NewValuePreview --> NewValueSelection : EvNewValueRejected
-  NewValuePreview --> NewValueSelection : EvNewValueSaved
+ProjectAdded --> ProjectRemoved : removeProject(Project project)
 
-  state NewValuePreview {
-     State1 -> State2
-  }
+ProjectAdded --> ProjectRemoved : removeProjectById(int projectId)
 
-}
+ProjectRemoved --> ProjectAdded : addProject(Project project)
+
+ProjectAdded --> ProjectIsEmpty : removeAllProjects()
+
+ProjectRemoved --> ProjectIsEmpty : removeAllProjects()
+
+ProjectIsEmpty --> ProjectAdded : addProject(Project project)
 @enduml
