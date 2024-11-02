@@ -3,9 +3,31 @@
 
 autonumber
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+actor User as user
+database Database as db
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+user -> db : Create project
+activate db
+db --> user : Project created
+deactivate db
+
+user -> db : Show projects
+activate db
+db --> user : Return all projects
+deactivate db
+
+user -> db : Create task within a project
+activate db
+db --> user : View updated project
+deactivate db
+
+alt User performs task
+user -> db : Task done
+activate db
+db --> user : Task executed
+deactivate db
+else Task not completed
+db --> user : Task remains pending
+end
+
 @enduml
