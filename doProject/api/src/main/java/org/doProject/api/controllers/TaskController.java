@@ -1,4 +1,4 @@
-package org.doProject.api.controller;
+package org.doProject.api.controllers;
 
 import io.javalin.Javalin;
 import org.doProject.core.domain.Task;
