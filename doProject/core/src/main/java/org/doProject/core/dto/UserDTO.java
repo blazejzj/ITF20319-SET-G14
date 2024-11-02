@@ -29,6 +29,12 @@ public class UserDTO {
         this.projectDTOs = projectDTOs;
     }
 
+    public UserDTO(int id, String userName) {
+        this.id = id;
+        this.userName = userName;
+        this.projectDTOs = new ArrayList<>();
+    }
+
     public String getUserName() {return userName;}
     public int getId() {return id;}
 

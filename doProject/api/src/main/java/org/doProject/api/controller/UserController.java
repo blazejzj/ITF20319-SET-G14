@@ -1,6 +1,7 @@
 package org.doProject.api.controller;
 
 import io.javalin.Javalin;
+import org.doProject.core.domain.User;
 import org.doProject.core.dto.UserDTO;
 import org.doProject.infrastructure.domain.LocalDatabase;
 
@@ -22,7 +23,18 @@ public class UserController {
             context.status(201).json(userDTO);
         });
 
-        // get user
+        // get user by their ID
+        app.get("api/users/{id}", context -> {
+           int userId = Integer.parseInt(context.pathParam("id")); // get id
+           // load from database
+           User user = localDatabase.loadUser(userId);
+           if (user == null) {
+               context.status(404).result("User has not been found!");
+           }
+           else {
+               UserDTO userDTO = new UserDTO(user.getId(), user.getUserName());
+           }
+        });
 
 
     }
