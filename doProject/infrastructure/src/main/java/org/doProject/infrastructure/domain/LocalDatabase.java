@@ -56,6 +56,7 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
     private static final String QUERY_DELETE_PROJECT_BY_USERID = "DELETE FROM Projects WHERE userID = ?";
     private static final String QUERY_DELETE_TASKS_BY_PROJECT = "DELETE FROM Tasks WHERE project_id = ?";
     private static final String QUERY_UPDATE_PROJECT = "UPDATE Projects SET title = ?, description = ? WHERE id = ?";
+    private static final String QUERY_SELECT_PROJECT_BY_ID = "SELECT * FROM Projects WHERE id = ?";
 
     // TASK TABLE QUERIES
     private static final String QUERY_SAVE_TASK = "INSERT INTO Tasks (title, description, dueDate, isFinished, isRepeating, repeatDays, project_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -270,6 +271,26 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
         updateProject(project.getId(), project.getTitle(), project.getDescription());
     }
 
+    @Override
+    public Project getProjectById(int projectId) throws SQLException {
+        try (Connection connection = connectionHandler.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_PROJECT_BY_ID)) {
+
+            preparedStatement.setInt(1, projectId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String description = resultSet.getString("description");
+                int userId = resultSet.getInt("userID");
+
+                return new Project(id, title, description, userId);
+            } else {
+                return null;
+            }
+        }
+    }
 
     // TASK METHODS
 

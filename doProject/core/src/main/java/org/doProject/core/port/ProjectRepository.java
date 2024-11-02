@@ -57,4 +57,12 @@ public interface ProjectRepository {
      * @throws SQLException if the project does not exist or a database access error occurs.
      */
     void deleteProject(int projectID) throws SQLException;
+
+    /**
+     * Retrieves a project by its ID from the Projects table.
+     * @param projectId the ID of the project to retrieve.
+     * @return the Project object if found, or null if not found.
+     * @throws SQLException if a database access error occurs.
+     */
+    Project getProjectById(int projectId) throws SQLException;
 }

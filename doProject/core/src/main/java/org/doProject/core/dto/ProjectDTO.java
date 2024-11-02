@@ -38,6 +38,22 @@ public class ProjectDTO {
         this.taskDTOs = taskDTOs;
     }
 
+    /**
+     * Creates a ProjectDTO with all project details, including ID, title, description,
+     * user ID, and a list of TaskDTO objects associated with the project.
+     *
+     * @param id          The unique identifier of the project.
+     * @param title       The title of the project.
+     * @param description A brief description of the project.
+     * @param userId      The ID of the user who owns this project.
+     */
+    public ProjectDTO(int id, String title, String description, int userId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.userID = userId;
+        this.taskDTOs = new ArrayList<>();
+    }
 
     /**
      * Creates a ProjectDTO without an ID, which is useful for creating new projects
@@ -53,6 +69,21 @@ public class ProjectDTO {
         this.description = description;
         this.userID = userId;
         this.taskDTOs = taskDTOs;
+    }
+
+    /**
+     * Creates a ProjectDTO without an ID, which is useful for creating new projects
+     * before an ID is assigned (which is normally going to occur in the database).
+     *
+     * @param title       The title of the project.
+     * @param description A brief description of the project.
+     * @param userId      The ID of the user who owns this project.
+     */
+    public ProjectDTO(String title, String description, int userId) {
+        this.title = title;
+        this.description = description;
+        this.userID = userId;
+        this.taskDTOs = new ArrayList<>();
     }
 
     public int getId() {return id;}
