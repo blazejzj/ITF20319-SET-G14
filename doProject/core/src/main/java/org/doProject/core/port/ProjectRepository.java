@@ -17,6 +17,14 @@ public interface ProjectRepository {
      */
     int saveProject(String title, String description, int userId) throws SQLException;
 
+    /**
+     * Inserts a new project for a specified user into the Projects table.
+     * @param project The Project object to save.
+     * @return The generated project ID.
+     * @throws SQLException if a database access error occurs.
+     */
+    int saveProject(Project project) throws SQLException;
+
 
     /**
      * Retrieves all projects associated with a specific user ID from the Projects table.
@@ -35,6 +43,13 @@ public interface ProjectRepository {
      * @throws SQLException if the update fails or no project is found with the given ID.
      */
     void updateProject(int projectId, String newTitle, String newDescription) throws SQLException;
+
+    /**
+     * Updates an existing projects title and description.
+     * @param project The Project object containing updated information.
+     * @throws SQLException if the update fails or no project is found with the given ID.
+     */
+    void updateProject(Project project) throws SQLException;
 
     /**
      * Deletes a project from the database, together with any associated tasks.

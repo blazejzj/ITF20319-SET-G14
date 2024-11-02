@@ -121,6 +121,11 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
     }
 
     @Override
+    public int saveUser(User user) throws SQLException {
+        return saveUser(user.getUserName());
+    }
+
+    @Override
     public User loadUser(int userId) throws SQLException {
         try (Connection connection = connectionHandler.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_USER_BY_ID)) {
@@ -147,6 +152,11 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
                 throw new SQLException("No rows affected");
             }
         }
+    }
+
+    @Override
+    public void updateUser(User user) throws SQLException {
+        updateUser(user.getId(), user.getUserName());
     }
 
     @Override
@@ -192,6 +202,12 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
                 return getGeneratedKey(preparedStatement);
         }
     }
+
+    @Override
+    public int saveProject(Project project) throws SQLException {
+        return saveProject(project.getTitle(), project.getDescription(), project.getUserID());
+    }
+
 
     @Override
     public ArrayList<Project> loadUserProjects(int userId) throws SQLException {
@@ -249,6 +265,12 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
         }
     }
 
+    @Override
+    public void updateProject(Project project) throws SQLException {
+        updateProject(project.getId(), project.getTitle(), project.getDescription());
+    }
+
+
     // TASK METHODS
 
     @Override
@@ -265,6 +287,19 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
             preparedStatement.executeUpdate();
             return getGeneratedKey(preparedStatement);
         }
+    }
+
+    @Override
+    public int saveTask(Task task, int projectId) throws SQLException {
+        return saveTask(
+                task.getTitle(),
+                task.getDescription(),
+                task.getDueDate(),
+                task.getIsFinished(),
+                task.getIsRepeating(),
+                task.getRepeatDays(),
+                projectId
+        );
     }
 
     @Override
@@ -323,7 +358,17 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
         }
     }
 
-
-
+    @Override
+    public void updateTask(Task task) throws SQLException {
+        updateTask(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.getDueDate(),
+                task.getIsFinished(),
+                task.getIsRepeating(),
+                task.getRepeatDays()
+        );
+    }
 }
 

@@ -22,6 +22,15 @@ public interface TaskRepository {
     int saveTask(String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays, int projectId) throws SQLException;
 
     /**
+     * Inserts a new task associated with a specific project into the Tasks table.
+     * @param task The Task object to save.
+     * @param projectId The ID of the project associated with the task.
+     * @return The generated task ID.
+     * @throws SQLException if a database access error occurs.
+     */
+    int saveTask(Task task, int projectId) throws SQLException;
+
+    /**
      * Retrieves all tasks associated with a specific project ID from the Tasks table.
      * @param projectId the ID of the project whose tasks are to be retrieved.
      * @return a list of Task objects associated with the project.
@@ -41,6 +50,13 @@ public interface TaskRepository {
      * @throws SQLException if the update fails or no task is found with the given ID.
      */
     void updateTask(int taskId, String newTitle, String newDescription, LocalDate newDueDate, int isFinished, int isRepeating, int repeatDays) throws SQLException;
+
+    /**
+     * Updates an existing tasks title, description, due date, and repetition settings.
+     * @param task The Task object containing updated information.
+     * @throws SQLException if the update fails or no task is found with the given ID.
+     */
+    void updateTask(Task task) throws SQLException;
 
     /**
      * Deletes a task from the Tasks table by its ID.
