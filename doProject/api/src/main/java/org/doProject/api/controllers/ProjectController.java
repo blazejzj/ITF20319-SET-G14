@@ -3,7 +3,9 @@ package org.doProject.api.controllers;
 import io.javalin.Javalin;
 import org.doProject.core.domain.Project;
 import org.doProject.core.dto.ProjectDTO;
-import org.doProject.infrastructure.domain.LocalDatabase;
+import org.doProject.core.usecases.*;
+import org.doProject.core.port.ProjectRepository;
+
 
 import java.util.ArrayList;
 
@@ -22,14 +24,22 @@ import java.util.ArrayList;
  * - DELETE /api/projects/{id}             : Deletes a project by its ID.
  */
 public class ProjectController {
-    private final LocalDatabase localDatabase;
+    private final CreateProjectUseCase createProjectUseCase;
+    private final GetProjectsByUserUseCase getProjectsByUserUseCase;
+    private final UpdateProjectUseCase updateProjectUseCase;
+    private final DeleteProjectUseCase deleteProjectUseCase;
 
     /**
      * Constructor for ProjectController.
-     * @param localDatabase An instance of LocalDatabase that handles project data.
+     * Initializes each use case with the provided ProjectRepository.
+     *
+     * @param projectRepository an instance of ProjectRepository to handle project data.
      */
-    public ProjectController(LocalDatabase localDatabase) {
-        this.localDatabase = localDatabase;
+    public ProjectController(ProjectRepository projectRepository) {
+        this.createProjectUseCase = new CreateProjectUseCase(projectRepository);
+        this.getProjectsByUserUseCase = new GetProjectsByUserUseCase(projectRepository);
+        this.updateProjectUseCase = new UpdateProjectUseCase(projectRepository);
+        this.deleteProjectUseCase = new DeleteProjectUseCase(projectRepository);
     }
 
     /**
@@ -55,31 +65,20 @@ public class ProjectController {
          *   "description": "Project Description"
          * }
          *
-         * On success return 201 - Created and the new projects details.
+         * On success, returns the list of projects as JSON.
+         * If the user has no projects or does not exist, returns an empty list.
+         * If an error occurs during retrieval, returns an appropriate error response.
          */
         app.post("/api/users/{userId}/projects", context -> {
-           int userId = Integer.parseInt(context.pathParam("userId"));
-
-           ProjectDTO projectDTO = context.bodyAsClass(ProjectDTO.class);
-
-           // we dont allow projects with empty names
-            if (projectDTO.getTitle() == null || projectDTO.getTitle().trim().isEmpty()) {
-                context.status(400).result("Project name cant be empty");
-            }
-
-            Project project = new Project(
-                    projectDTO.getTitle(),
-                    projectDTO.getDescription(),
-                    userId
-            );
+            int userId = Integer.parseInt(context.pathParam("userId"));
+            ProjectDTO projectDTO = context.bodyAsClass(ProjectDTO.class);
 
             try {
-                int projetId = localDatabase.saveProject(project);
-                project.setId(projetId);
-                projectDTO.setId(projetId);
-                context.status(201).json(projectDTO);
-            }
-            catch (Exception e) {
+                ProjectDTO createdProjectDTO = createProjectUseCase.execute(projectDTO, userId);
+                context.status(201).json(createdProjectDTO);
+            } catch (IllegalArgumentException e) {
+                context.status(400).result(e.getMessage());
+            } catch (Exception e) {
                 context.status(500).result("Error with creating projects");
             }
         });
@@ -93,28 +92,16 @@ public class ProjectController {
          * Path Parameter:
          * - {userId} : ID of the user whose projects are to be retrieved.
          *
-         * On success, returns the list of projects as JSON.
-         * If the user has no projects or does not exist, returns an empty list.
+         * On success, returns 204 No Content.
+         * If the project is not found or validation fails, returns an appropriate error response.
+         * If an error occurs during update, returns 500 Internal Server Error.
          */
 
         app.get("/api/users/{userId}/projects", context -> {
             int userId = Integer.parseInt(context.pathParam("userId"));
 
             try {
-                ArrayList<Project> projects = localDatabase.loadUserProjects(userId);
-
-                ArrayList<ProjectDTO> projectDTOs = new ArrayList<>();
-
-                for (Project project : projects) {
-                    ProjectDTO projectDTO = new ProjectDTO (
-                            project.getId(),
-                            project.getTitle(),
-                            project.getDescription(),
-                            userId
-                    );
-                    projectDTOs.add(projectDTO);
-                }
-
+                ArrayList<ProjectDTO> projectDTOs = getProjectsByUserUseCase.execute(userId);
                 context.json(projectDTOs);
             } catch (Exception e) {
                 context.status(500).result("Error retrieving projects");
@@ -136,41 +123,18 @@ public class ProjectController {
          */
         app.put("/api/projects/{id}", context -> {
             int projectId = Integer.parseInt(context.pathParam("id"));
-
             ProjectDTO projectDTO = context.bodyAsClass(ProjectDTO.class);
 
-            if (projectDTO.getTitle() == null || projectDTO.getTitle().trim().isEmpty()) {
-                context.status(400).result("Project title cant be empty");
-                return;
-            }
-
             try {
-                // Retrieve the existing project to get the userId
-                Project existingProject = localDatabase.getProjectById(projectId);
-
-                if (existingProject == null) {
-                    context.status(404).result("Project not found");
-                    return;
-                }
-
-                // Use the userId from the existing project
-                int userId = existingProject.getUserID();
-
-                // Create a Project object with the existing userId
-                Project updatedProject = new Project(
-                        projectId,
-                        projectDTO.getTitle(),
-                        projectDTO.getDescription(),
-                        userId
-                );
-
-                // Update the project in the database
-                localDatabase.updateProject(updatedProject);
-
-                // Return 204 No Content on successful update
+                updateProjectUseCase.execute(projectId, projectDTO);
                 context.status(204);
+            } catch (IllegalArgumentException e) {
+                if (e.getMessage().equals("Project not found")) {
+                    context.status(404).result(e.getMessage());
+                } else {
+                    context.status(400).result(e.getMessage());
+                }
             } catch (Exception e) {
-                // Handle exceptions and return 500 Internal Server Error
                 context.status(500).result("Error updating project");
             }
         });
@@ -193,7 +157,7 @@ public class ProjectController {
             int projectId = Integer.parseInt(context.pathParam("id"));
 
             try {
-                localDatabase.deleteProject(projectId);
+                deleteProjectUseCase.execute(projectId);
                 context.status(204);
             } catch (Exception e) {
                 context.status(500).result("Error with deleting project");

@@ -3,7 +3,8 @@ package org.doProject.api.controllers;
 import io.javalin.Javalin;
 import org.doProject.core.domain.Task;
 import org.doProject.core.dto.TaskDTO;
-import org.doProject.infrastructure.domain.LocalDatabase;
+import org.doProject.core.usecases.*;
+import org.doProject.core.port.TaskRepository;
 
 import java.util.ArrayList;
 
@@ -24,15 +25,22 @@ import java.util.ArrayList;
 
 public class TaskController {
 
-    private final LocalDatabase localDatabase;
+    private final CreateTaskUseCase createTaskUseCase;
+    private final GetTasksByProjectUseCase getTasksByProjectUseCase;
+    private final UpdateTaskUseCase updateTaskUseCase;
+    private final DeleteTaskUseCase deleteTaskUseCase;
 
     /**
      * Constructor for TaskController.
+     * Initializes each use case with the provided TaskRepository.
      *
-     * @param localDatabase An instance of LocalDatabase that handles task data.
+     * @param taskRepository an instance of TaskRepository to handle task data.
      */
-    public TaskController(LocalDatabase localDatabase) {
-        this.localDatabase = localDatabase;
+    public TaskController(TaskRepository taskRepository) {
+        this.createTaskUseCase = new CreateTaskUseCase(taskRepository);
+        this.getTasksByProjectUseCase = new GetTasksByProjectUseCase(taskRepository);
+        this.updateTaskUseCase = new UpdateTaskUseCase(taskRepository);
+        this.deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
     }
 
     /**

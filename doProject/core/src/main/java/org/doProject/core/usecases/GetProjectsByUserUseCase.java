@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * If no projects exist for the specified user, an empty list is returned.
  */
-public class GetProjectByUserUseCase {
+public class GetProjectsByUserUseCase {
 
     private final ProjectRepository projectRepository;
 
@@ -26,7 +26,7 @@ public class GetProjectByUserUseCase {
      *
      * @param projectRepository an instance of ProjectRepository to handle project data operations.
      */
-    public GetProjectByUserUseCase(ProjectRepository projectRepository) {
+    public GetProjectsByUserUseCase(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
 
