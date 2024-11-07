@@ -56,8 +56,8 @@ public class TaskController {
         *   "title": "Task Title",
         *   "description": "Task Description",
         *   "dueDate": "2023-11-05",
-        *   "isFinished": false,
-        *   "isRepeating": false,
+        *   "isFinished": 0,
+        *   "isRepeating": 0,
         *   "repeatDays": 0
         * }
         * On success, returns 201 Created and the new task's details.
@@ -105,8 +105,8 @@ public class TaskController {
         *   "title": "Updated Task Title",
         *   "description": "Updated Task Description",
         *   "dueDate": "2023-12-10",
-        *   "isFinished": true,
-        *   "isRepeating": false,
+        *   "isFinished": 1,
+        *   "isRepeating": 0,
         *   "repeatDays": 0
         * }
         * On success, returns 204 No Content. Returns 500 on server error.
