@@ -3,131 +3,136 @@ package org.doProject.api.controllers;
 import io.javalin.Javalin;
 import org.doProject.core.domain.User;
 import org.doProject.core.dto.UserDTO;
-import org.doProject.infrastructure.domain.LocalDatabase;
+import org.doProject.core.port.UserRepository;
+import org.doProject.core.usecases.CreateUserUseCase;
+import org.doProject.core.usecases.DeleteUserUseCase;
+import org.doProject.core.usecases.GetUserByIdUseCase;
+import org.doProject.core.usecases.UpdateUserUseCase;
 
 /**
- * UserController is mainly responsible for handling API requests related to users.
- * This includes creating, retrieving, updating, and deleting user records.
+ * Handles API requests for user operations including creating, retrieving,
+ * updating, and deleting users. Defines API routes for managing user data.
  *
- * The controller is definning routes and logic for each endpoint, using a LocalDatabase
- * instance to store and control/manage user data. This makes it easier to interact with
- * user information through API calls.
- *
- * Endpoints this API provides:
- * - POST /api/users      : Creates a new user.
- * - GET /api/users/{id}  : Retrieves user details by user ID.
- * - PUT /api/users/{id}  : Updates an existing user.
- * - DELETE /api/users/{id} : Deletes a user by their ID.
+ * Endpoints:
+ * - POST /api/users      : Create a new user.
+ * - GET /api/users/{id}  : Retrieve user details by ID.
+ * - PUT /api/users/{id}  : Update an existing user.
+ * - DELETE /api/users/{id}: Delete a user by ID.
  */
 public class UserController {
 
-    private final LocalDatabase localDatabase;
+    private final CreateUserUseCase createUserUseCase;
+    private final GetUserByIdUseCase getUserByIdUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
 
     /**
-     * Constructor for UserController.
+     * Initializes the UserController with the provided UserRepository for managing user data.
      *
-     * @param localDatabase An instance of LocalDatabase that handles user data.
+     * @param userRepository UserRepository for data storage operations.
      */
-    public UserController(LocalDatabase localDatabase) {
-        this.localDatabase = localDatabase;
+    public UserController(UserRepository userRepository) {
+        this.createUserUseCase = new CreateUserUseCase(userRepository);
+        this.getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
+        this.updateUserUseCase = new UpdateUserUseCase(userRepository);
+        this.deleteUserUseCase = new DeleteUserUseCase(userRepository);
     }
 
     /**
-     * Registers routes related to user operations on the Javalin application.
+     * Registers user-related API routes with the provided Javalin application.
      *
-     * @param app The Javalin application where routes are registered.
+     * @param app The Javalin application for route registration.
      */
     public void registerRoutes(Javalin app) {
 
-        // 1. CREATE a new user
+        // CREATE -> new user
         /**
-         * POST /api/users
-         *
-         * This endpoint allows the creation of a new user.
-         * Expects a JSON body with user details.
-         *
-         * Example request body:
-         * {
-         *   "userName": "JohnDoe"
-         * }
-         *
-         * On success, returns 201 Created and the new user's details.
-         */
+        * POST /api/users
+        *
+        * Creates a new user with the provided details in the request body.
+        * Expects a JSON body with user information.
+        *
+        * Example request body:
+        * ```json
+        * {
+        *   "userName": "JohnDoe"
+        * }
+        * ```
+        * On success, returns 201 Created with the new user's details.
+        */
         app.post("api/users", context -> {
             UserDTO userDTO = context.bodyAsClass(UserDTO.class);
-            int userId = localDatabase.saveUser(userDTO.getUserName());
-            userDTO.setId(userId);
-            context.status(201).json(userDTO);
+            try {
+                UserDTO createdUserDTO = createUserUseCase.execute(userDTO);
+                context.status(201).json(createdUserDTO);
+            }
+            catch (Exception e) {
+                context.status(500).result("Error creating user");
+            }
         });
 
         // 2. READ: Retrieve user by ID
         /**
          * GET /api/users/{id}
-         *
-         * Retrieves the details of a user by their ID.
-         *
-         * Path Parameter:
-         * - {id} : ID of the user to retrieve.
-         *
-         * On success, returns the user details as JSON.
-         * If the user is not found, returns 404 Not Found with an error message.
+         * Fetches user details by ID.
+         * Path parameter: {id} - User ID.
+         * Returns user details as JSON, or 404 if not found.
          */
-        app.get("api/users/{id}", context -> {
+        app.get("/api/users/{id}", context -> {
             int userId = Integer.parseInt(context.pathParam("id"));
-            User user = localDatabase.loadUser(userId);
-            if (user == null) {
-                context.status(404).result("User has not been found!");
-            } else {
-                UserDTO userDTO = new UserDTO(user.getId(), user.getUserName());
+            try {
+                UserDTO userDTO = getUserByIdUseCase.execute(userId);
                 context.json(userDTO);
             }
-        });
+            catch (Exception e) {
+                context.status(404).result(e.getMessage());
+            }});
 
-        // 3. UPDATE an existing user
+        // UPDATE -> existing user
         /**
-         * PUT /api/users/{id}
-         *
-         * Updates the details of an existing user by ID.
-         * Expects a JSON body with updated user details.
-         *
-         * Path Parameter:
-         * - {id} : ID of the user to update.
-         *
-         * On success, returns 204 No Content.
-         * If an error occurs during update, returns 500 Internal Server Error.
-         */
-        app.put("api/users/{id}", context -> {
+        * PUT /api/users/{id}
+        *
+        * Updates an existing user's details. Expects a JSON body with updated user details.
+        * Path Parameter:
+        * - {id} : ID of the user to update.
+        *
+        * Example request body:
+        * ```json
+        * {
+        *   "userName": "UpdatedUserName"
+        * }
+        * ```
+        * On success, returns 204 No Content. Returns 500 if an error occurs.
+        */
+        app.put("/api/users/{id}", context -> {
             int userId = Integer.parseInt(context.pathParam("id"));
             UserDTO userDTO = context.bodyAsClass(UserDTO.class);
-            User user = new User(userId, userDTO.getUserName());
 
             try {
-                localDatabase.updateUser(user);
+                updateUserUseCase.execute(userId, userDTO);
                 context.status(204);
-            } catch (Exception e) {
-                context.status(500).result("Error with updating the user");
+            }
+            catch (Exception e) {
+                context.status(500).result("Error updating user");
             }
         });
 
         // 4. DELETE a user by ID
         /**
          * DELETE /api/users/{id}
-         *
-         * Deletes a user from the database by their ID.
-         *
-         * Path Parameter:
-         * - {id} : ID of the user to delete.
-         *
-         * On success, returns 204 No Content.
-         * If an error occurs during deletion, returns 500 Internal Server Error.
+         * Removes a user by ID.
+         * Path parameter: {id} - User ID.
+         * Returns 204 No Content on success or 500 if an error occurs.
          */
-        app.delete("api/users/{id}", context -> {
+        app.delete("/api/users/{id}", context -> {
             int userId = Integer.parseInt(context.pathParam("id"));
+
             try {
-                localDatabase.deleteUser(userId);
+                deleteUserUseCase.execute(userId);
                 context.status(204);
-            } catch (Exception e) {
-                context.status(500).result("Error with deleting the user");
+            }
+            catch (Exception e) {
+                context.status(500).result("Error deleting user");
             }
         });
     }

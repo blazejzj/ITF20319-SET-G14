@@ -4,31 +4,35 @@ import org.doProject.core.dto.TaskDTO;
 import org.doProject.core.port.TaskRepository;
 
 /**
- * Use case for creating a new task within a project.
+ * Creates a new task within a specified project.
+ *
+ * Ensures:
+ * - Task title is not empty.
+ *
+ * Throws an exception if validation fails or if an error occurs during task creation.
  */
 public class CreateTaskUseCase {
 
     private final TaskRepository taskRepository;
 
     /**
-     * Constructor for CreateTaskUseCase.
+     * Constructs CreateTaskUseCase with the provided repository.
      *
-     * @param taskRepository the repository interface for task operations.
+     * @param taskRepository TaskRepository for task data handling.
      */
     public CreateTaskUseCase(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     /**
-     * Executes the use case to create a new task.
+     * Creates a new task within a project.
      *
-     * @param taskDTO   the data transfer object containing task details.
+     * @param taskDTO   TaskDTO containing the task's details.
      * @param projectId the ID of the project to which the task belongs.
-     * @return a TaskDTO containing the created task's details.
-     * @throws Exception if an error occurs during task creation.
+     * @return a TaskDTO with details of the created task.
+     * @throws Exception if an error occurs or if the task title is empty.
      */
     public TaskDTO execute(TaskDTO taskDTO, int projectId) throws Exception {
-
         if (taskDTO.getTitle() == null || taskDTO.getTitle().trim().isEmpty()) {
             throw new Exception("Task title can't be empty");
         }

@@ -3,23 +3,25 @@ package org.doProject.core.usecases;
 import org.doProject.core.port.TaskRepository;
 
 /**
- * Use case for deleting a task by its ID.
+ * Handles deletion of a task by its ID.
+ *
+ * Throws an exception if an error occurs during deletion.
  */
 public class DeleteTaskUseCase {
 
     private final TaskRepository taskRepository;
 
     /**
-     * Constructor for DeleteTaskUseCase.
+     * Constructs DeleteTaskUseCase with the provided repository.
      *
-     * @param taskRepository the repository interface for task operations.
+     * @param taskRepository TaskRepository for task data handling.
      */
     public DeleteTaskUseCase(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     /**
-     * Executes the use case to delete a task.
+     * Deletes a task by its ID.
      *
      * @param taskId the ID of the task to delete.
      * @throws Exception if an error occurs during deletion.

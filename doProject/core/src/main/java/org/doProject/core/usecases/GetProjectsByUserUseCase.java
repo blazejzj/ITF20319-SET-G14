@@ -8,34 +8,29 @@ import java.util.ArrayList;
 
 
 /**
- * GetProjectByUserUseCase is responsible for retrieving all projects associated
- * with a specific user from the repository.
+ * Retrieves all projects associated with a specific user.
  *
- * This use case fetches all projects for the provided user ID, transforming each project
- * into a ProjectDTO for easier data handling in the presentation layer.
- *
- * If no projects exist for the specified user, an empty list is returned.
+ * Returns an empty list if no projects exist for the user.
  */
 public class GetProjectsByUserUseCase {
 
     private final ProjectRepository projectRepository;
 
-
     /**
-     * Constructor for GetProjectByUserUseCase.
+     * Constructs GetProjectsByUserUseCase with the given repository.
      *
-     * @param projectRepository an instance of ProjectRepository to handle project data operations.
+     * @param projectRepository ProjectRepository for data handling.
      */
     public GetProjectsByUserUseCase(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
 
     /**
-     * Executes the retrieval of projects for a specified user ID.
+     * Fetches projects for a specific user ID.
      *
      * @param userId the ID of the user whose projects are to be retrieved.
-     * @return an ArrayList of ProjectDTOs representing the user's projects.
-     * @throws Exception if there is an issue with retrieving the projects.
+     * @return a list of ProjectDTOs representing the user's projects.
+     * @throws Exception if there is an issue with retrieval.
      */
     public ArrayList<ProjectDTO> execute(int userId) throws Exception {
         ArrayList<Project> projects = projectRepository.loadUserProjects(userId);

@@ -1,7 +1,6 @@
 package org.doProject.api.controllers;
 
 import io.javalin.Javalin;
-import org.doProject.core.domain.Project;
 import org.doProject.core.dto.ProjectDTO;
 import org.doProject.core.usecases.*;
 import org.doProject.core.port.ProjectRepository;
@@ -51,33 +50,26 @@ public class ProjectController {
 
         // CREATE -> a new project
         /**
-         * POST /api/users/{userId}/projects
-         *
-         * This endpoint allows the creation of a new project for a user.
-         * Expects a JSON body with project details.
-         *
-         * Path Parameter:
-         * - {userId} : ID of the user to who the project belongs.
-         *
-         * Example request body:
-         * {
-         *   "title": "Project Title",
-         *   "description": "Project Description"
-         * }
-         *
-         * On success, returns the list of projects as JSON.
-         * If the user has no projects or does not exist, returns an empty list.
-         * If an error occurs during retrieval, returns an appropriate error response.
-         */
+        * POST /api/users/{userId}/projects
+        *
+        * Creates a new project for a specific user. Expects a JSON body with project details.
+        *
+        * Path Parameter:
+        * - {userId} : ID of the user to whom the project belongs.
+        *
+        * Example request body:
+        * {
+        *   "title": "Project Title",
+        *   "description": "Project Description"
+        * }
+        * On success, returns 201 Created and the new project's details.
+        */
         app.post("/api/users/{userId}/projects", context -> {
             int userId = Integer.parseInt(context.pathParam("userId"));
             ProjectDTO projectDTO = context.bodyAsClass(ProjectDTO.class);
-
             try {
                 ProjectDTO createdProjectDTO = createProjectUseCase.execute(projectDTO, userId);
                 context.status(201).json(createdProjectDTO);
-            } catch (IllegalArgumentException e) {
-                context.status(400).result(e.getMessage());
             } catch (Exception e) {
                 context.status(500).result("Error with creating projects");
             }
@@ -110,17 +102,19 @@ public class ProjectController {
 
         // UPDATE -> an existing project
         /**
-         * PUT /api/projects/{id}
-         *
-         * Updates the details of an existing project by ID.
-         * Expects a JSON body with updated project details.
-         *
-         * Path Parameter:
-         * - {id} : ID of the project to update.
-         *
-         * On success, returns 204 No Content.
-         * If an error occurs during update, returns 500 Internal Server Error.
-         */
+        * PUT /api/projects/{id}
+        *
+        * Updates an existing project by ID. Expects a JSON body with updated project details.
+        * Path Parameter:
+        * - {id} : ID of the project to update.
+        *
+        * Example request body:
+        * {
+        *   "title": "Updated Project Title",
+        *   "description": "Updated Project Description"
+        * }
+        * On success, returns 204 No Content. Returns 500 if an error occurs.
+        */
         app.put("/api/projects/{id}", context -> {
             int projectId = Integer.parseInt(context.pathParam("id"));
             ProjectDTO projectDTO = context.bodyAsClass(ProjectDTO.class);
