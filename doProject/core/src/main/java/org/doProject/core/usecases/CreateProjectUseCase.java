@@ -26,7 +26,7 @@ public class CreateProjectUseCase {
         // assign (genereate) id via database
         int projectId = projectRepository.saveProject(project);
         projectDTO.setId(projectId);
-        
+
         return projectDTO;
     }
 }
