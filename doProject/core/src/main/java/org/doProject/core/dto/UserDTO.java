@@ -17,6 +17,10 @@ public class UserDTO {
     // to just hold the project IDs for simple data managment.
 
     /**
+     * Default constructor for Jackson
+     */
+    public UserDTO() {}
+    /**
      * Creates a UserDTO with the specified ID, username, and a list of associated projectDTOs (projects).
      *
      * @param id           The unique identifier of the user.

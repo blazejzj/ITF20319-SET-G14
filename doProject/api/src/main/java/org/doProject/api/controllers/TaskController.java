@@ -123,18 +123,6 @@ public class TaskController {
             }
         });
 
-        app.put("/api/tasks/{id}", context -> {
-            int taskId = Integer.parseInt(context.pathParam("id"));
-            TaskDTO taskDTO = context.bodyAsClass(TaskDTO.class);
-
-            try {
-                updateTaskUseCase.execute(taskId, taskDTO);
-                context.status(204);
-            } catch (Exception e) {
-                context.status(500).result("Error updating task");
-            }
-        });
-
         // DELETE -> task by ID
         /**
          * DELETE /api/tasks/{id}

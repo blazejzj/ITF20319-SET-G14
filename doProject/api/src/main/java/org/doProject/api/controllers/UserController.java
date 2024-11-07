@@ -60,14 +60,14 @@ public class UserController {
         * ```
         * On success, returns 201 Created with the new user's details.
         */
-        app.post("api/users", context -> {
+        app.post("/api/users", context -> {
             UserDTO userDTO = context.bodyAsClass(UserDTO.class);
             try {
                 UserDTO createdUserDTO = createUserUseCase.execute(userDTO);
                 context.status(201).json(createdUserDTO);
-            }
-            catch (Exception e) {
-                context.status(500).result("Error creating user");
+            } catch (Exception e) {
+                e.printStackTrace();
+                context.status(500).result("Error creating user: " + e.getMessage());
             }
         });
 
