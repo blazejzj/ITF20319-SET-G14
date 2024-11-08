@@ -4,9 +4,25 @@ import io.javalin.Javalin;
 import org.doProject.infrastructure.domain.LocalDatabase;
 import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 
+// We need Jackson dependency to format and map things correctly
+// Wont work without it.
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.javalin.json.JavalinJackson;
+
+/**
+ * This class is just for demo purposes of testing with PostMan.
+ * It isn't a "part" of the main application. Made just for testing and
+ * experimenting purposes.
+ */
 public class App {
     public static void main(String[] args) {
-        Javalin app = Javalin.create().start(7000);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        Javalin app = Javalin.create(config -> {
+            config.jsonMapper(new JavalinJackson());
+        }).start(7000);
 
         LocalDatabaseConnection connectionHandler = new LocalDatabaseConnection("test.db");
         LocalDatabase localDatabase = new LocalDatabase(connectionHandler);
