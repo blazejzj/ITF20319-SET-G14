@@ -33,8 +33,24 @@ public class UserDTO {
         this.projectDTOs = projectDTOs;
     }
 
+    /**
+     * Creates a UserDTO with the specified ID, username, and a empty list of associated projectDTOs (projects).
+     *
+     * @param id           The unique identifier of the user.
+     * @param userName     The name of the user.
+     */
     public UserDTO(int id, String userName) {
         this.id = id;
+        this.userName = userName;
+        this.projectDTOs = new ArrayList<>();
+    }
+
+    /**
+     * Creates a UserDTO without an id, just with an username, and a empty list of associated projectDTOs (projects).
+     *
+     * @param userName     The name of the user.
+     */
+    public UserDTO(String userName) {
         this.userName = userName;
         this.projectDTOs = new ArrayList<>();
     }

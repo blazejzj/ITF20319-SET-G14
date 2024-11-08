@@ -35,6 +35,10 @@ public class GetUserByIdUseCase {
             throw new Exception("User not found");
         }
 
+        if (userId < 0) {
+            throw new Exception("Invalid user id");
+        }
+
         return new UserDTO(user.getId(), user.getUserName());
     }
 }
