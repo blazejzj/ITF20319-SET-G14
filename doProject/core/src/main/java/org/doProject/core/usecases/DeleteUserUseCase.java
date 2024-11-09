@@ -30,7 +30,13 @@ public class DeleteUserUseCase {
      * @throws Exception if the user is not found or if an error occurs during deletion.
      */
     public void execute(int userId) throws Exception {
+
+        if (userId < 0) {
+            throw new Exception("Invalid user id");
+        }
+
         User existingUser = userRepository.loadUser(userId);
+
         if (existingUser == null) {
             throw new Exception("User not found");
         }

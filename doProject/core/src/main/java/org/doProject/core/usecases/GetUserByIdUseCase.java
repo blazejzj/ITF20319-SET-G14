@@ -30,14 +30,15 @@ public class GetUserByIdUseCase {
      * @throws Exception if the user is not found or an error occurs during retrieval.
      */
     public UserDTO execute(int userId) throws Exception {
+        if (userId < 0) {
+            throw new Exception("Invalid user id");
+        }
+
         User user = userRepository.loadUser(userId);
         if (user == null) {
             throw new Exception("User not found");
         }
 
-        if (userId < 0) {
-            throw new Exception("Invalid user id");
-        }
 
         return new UserDTO(user.getId(), user.getUserName());
     }
