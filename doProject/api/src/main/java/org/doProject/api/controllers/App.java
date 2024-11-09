@@ -35,7 +35,7 @@ public class App {
         }
 
         UserController userController = new UserController(localDatabase);
-        ProjectController projectController = new ProjectController(localDatabase);
+        ProjectController projectController = new ProjectController(localDatabase, localDatabase);
         TaskController taskController = new TaskController(localDatabase);
 
         userController.registerRoutes(app);

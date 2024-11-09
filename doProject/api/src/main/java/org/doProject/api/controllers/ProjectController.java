@@ -2,6 +2,7 @@ package org.doProject.api.controllers;
 
 import io.javalin.Javalin;
 import org.doProject.core.dto.ProjectDTO;
+import org.doProject.core.port.TaskRepository;
 import org.doProject.core.usecases.*;
 import org.doProject.core.port.ProjectRepository;
 
@@ -34,9 +35,12 @@ public class ProjectController {
      *
      * @param projectRepository an instance of ProjectRepository to handle project data.
      */
-    public ProjectController(ProjectRepository projectRepository) {
+    public ProjectController(ProjectRepository projectRepository, TaskRepository taskRepository) {
         this.createProjectUseCase = new CreateProjectUseCase(projectRepository);
-        this.getProjectsByUserUseCase = new GetProjectsByUserUseCase(projectRepository);
+
+        GetTasksByProjectUseCase getTasksByProjectUseCase = new GetTasksByProjectUseCase(taskRepository);
+        this.getProjectsByUserUseCase = new GetProjectsByUserUseCase(projectRepository, getTasksByProjectUseCase);
+
         this.updateProjectUseCase = new UpdateProjectUseCase(projectRepository);
         this.deleteProjectUseCase = new DeleteProjectUseCase(projectRepository);
     }

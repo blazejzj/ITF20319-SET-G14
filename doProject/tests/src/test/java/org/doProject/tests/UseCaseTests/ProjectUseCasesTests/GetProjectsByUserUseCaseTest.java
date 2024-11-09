@@ -4,6 +4,7 @@ import org.doProject.core.domain.Project;
 import org.doProject.core.dto.ProjectDTO;
 import org.doProject.core.port.ProjectRepository;
 import org.doProject.core.usecases.GetProjectsByUserUseCase;
+import org.doProject.core.usecases.GetTasksByProjectUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,16 @@ class GetProjectsByUserUseCaseTest {
 
     @Mock
     private ProjectRepository projectRepository;
+
+    @Mock
+    private GetTasksByProjectUseCase getTasksByProjectUseCase;
+
     private GetProjectsByUserUseCase getProjectsByUserUseCase;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        getProjectsByUserUseCase = new GetProjectsByUserUseCase(projectRepository);
+        getProjectsByUserUseCase = new GetProjectsByUserUseCase(projectRepository, getTasksByProjectUseCase);
     }
 
     @Test

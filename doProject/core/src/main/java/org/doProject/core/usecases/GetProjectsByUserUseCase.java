@@ -2,10 +2,10 @@ package org.doProject.core.usecases;
 
 import org.doProject.core.domain.Project;
 import org.doProject.core.dto.ProjectDTO;
+import org.doProject.core.dto.TaskDTO;
 import org.doProject.core.port.ProjectRepository;
 
 import java.util.ArrayList;
-
 
 /**
  * Retrieves all projects associated with a specific user.
@@ -15,18 +15,21 @@ import java.util.ArrayList;
 public class GetProjectsByUserUseCase {
 
     private final ProjectRepository projectRepository;
+    private final GetTasksByProjectUseCase getTasksByProjectUseCase;
 
     /**
-     * Constructs GetProjectsByUserUseCase with the given repository.
+     * Constructs GetProjectsByUserUseCase with the given repository and task use case.
      *
      * @param projectRepository ProjectRepository for data handling.
+     * @param getTasksByProjectUseCase Use case to retrieve tasks by project ID.
      */
-    public GetProjectsByUserUseCase(ProjectRepository projectRepository) {
+    public GetProjectsByUserUseCase(ProjectRepository projectRepository, GetTasksByProjectUseCase getTasksByProjectUseCase) {
         this.projectRepository = projectRepository;
+        this.getTasksByProjectUseCase = getTasksByProjectUseCase;
     }
 
     /**
-     * Fetches projects for a specific user ID.
+     * Fetches projects for a specific user ID, including tasks for each project.
      *
      * @param userId the ID of the user whose projects are to be retrieved.
      * @return a list of ProjectDTOs representing the user's projects.
@@ -43,6 +46,9 @@ public class GetProjectsByUserUseCase {
                     project.getDescription(),
                     userId
             );
+
+            ArrayList<TaskDTO> taskDTOs = getTasksByProjectUseCase.execute(project.getId());
+            projectDTO.setTaskDTOs(taskDTOs);
             projectDTOs.add(projectDTO);
         }
         return projectDTOs;
