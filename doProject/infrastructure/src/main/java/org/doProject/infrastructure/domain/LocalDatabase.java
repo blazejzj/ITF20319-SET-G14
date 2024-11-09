@@ -64,6 +64,7 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
     private static final String QUERY_DELETE_TASK = "DELETE FROM Tasks WHERE id = ?";
     private static final String QUERY_DELETE_TASKS_BY_USERID = "DELETE FROM Tasks WHERE project_id IN (SELECT id FROM Projects WHERE userID = ?)";
     private static final String QUERY_UPDATE_TASK = "UPDATE Tasks SET title = ?, description = ?, dueDate = ?, isFinished = ?, isRepeating = ?, repeatDays = ? WHERE id = ?";
+    private static final String QUERY_SELECT_TASK_BY_ID = "SELECT * FROM Tasks WHERE id = ?";
 
     // CONNECTION OBJECT
     private final LocalDatabaseConnection connectionHandler;
@@ -391,5 +392,38 @@ public class LocalDatabase implements UserRepository, ProjectRepository, TaskRep
                 task.getRepeatDays()
         );
     }
+
+    /**
+     * Retrieves a task by its ID from the database.
+     *
+     * @param taskId the ID of the task to retrieve.
+     * @return the Task object if found, null otherwise.
+     * @throws SQLException if a database access error occurs.
+     */
+    @Override
+    public Task getTaskById(int taskId) throws SQLException {
+        try (Connection connection = connectionHandler.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(QUERY_SELECT_TASK_BY_ID)) {
+
+            preparedStatement.setInt(1, taskId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String description = resultSet.getString("description");
+                LocalDate dueDate = resultSet.getDate("dueDate").toLocalDate();
+                int isFinished = resultSet.getInt("isFinished");
+                int isRepeating = resultSet.getInt("isRepeating");
+                int repeatDays = resultSet.getInt("repeatDays");
+
+                Task task = new Task(id, title, description, dueDate, isFinished, isRepeating, repeatDays);
+                return task;
+            } else {
+                return null;
+            }
+        }
+    }
+
 }
 

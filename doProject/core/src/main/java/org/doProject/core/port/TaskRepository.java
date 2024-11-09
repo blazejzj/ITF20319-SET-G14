@@ -64,4 +64,14 @@ public interface TaskRepository {
      * @throws SQLException if no task with the specified ID exists or if a database access error occurs.
      */
     void deleteTask(int taskID) throws SQLException;
+
+    /**
+     * Retrieves a task by its ID.
+     *
+     * @param taskId the ID of the task.
+     * @return the task if found, null otherwise.
+     * @throws Exception if an error occurs during retrieval.
+     */
+    Task getTaskById(int taskId) throws Exception;
+
 }

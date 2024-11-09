@@ -1,199 +1,143 @@
 package org.doProject.api.controllers;
 
 import io.javalin.Javalin;
-import org.doProject.core.domain.Task;
 import org.doProject.core.dto.TaskDTO;
-import org.doProject.infrastructure.domain.LocalDatabase;
+import org.doProject.core.usecases.*;
+import org.doProject.core.port.TaskRepository;
 
 import java.util.ArrayList;
 
 /**
- * TaskController is responsible for handling API requests related to tasks.
- * This includes creating, retrieving, updating, and deleting task records.
+ * Manages API requests for tasks, including creation, retrieval, updating, and deletion.
  *
- * The controller defines routes and logic for each endpoint, using a LocalDatabase
- * instance to store and manage task data. This makes it easier to interact with
- * task information through API calls.
- *
- * Endpoints this API provides:
- * - POST /api/projects/{projectId}/tasks      : Creates a new task within a project.
- * - GET /api/projects/{projectId}/tasks       : Retrieves all tasks for a project.
- * - PUT /api/tasks/{id}                       : Updates an existing task.
- * - DELETE /api/tasks/{id}                    : Deletes a task by its ID.
+ * Endpoints:
+ * - POST /api/projects/{projectId}/tasks : Create a new task within a project.
+ * - GET /api/projects/{projectId}/tasks  : Retrieve all tasks for a project.
+ * - PUT /api/tasks/{id}                  : Update an existing task.
+ * - DELETE /api/tasks/{id}               : Delete a task by its ID.
  */
-
 public class TaskController {
 
-    private final LocalDatabase localDatabase;
+    private final CreateTaskUseCase createTaskUseCase;
+    private final GetTasksByProjectUseCase getTasksByProjectUseCase;
+    private final UpdateTaskUseCase updateTaskUseCase;
+    private final DeleteTaskUseCase deleteTaskUseCase;
 
     /**
-     * Constructor for TaskController.
+     * Initializes the TaskController with the provided TaskRepository.
      *
-     * @param localDatabase An instance of LocalDatabase that handles task data.
+     * @param taskRepository TaskRepository for task data operations.
      */
-    public TaskController(LocalDatabase localDatabase) {
-        this.localDatabase = localDatabase;
+    public TaskController(TaskRepository taskRepository) {
+        this.createTaskUseCase = new CreateTaskUseCase(taskRepository);
+        this.getTasksByProjectUseCase = new GetTasksByProjectUseCase(taskRepository);
+        this.updateTaskUseCase = new UpdateTaskUseCase(taskRepository);
+        this.deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
     }
 
     /**
-     * Registers routes related to task operations on the Javalin application.
+     * Registers task-related API routes.
      *
-     * @param app The Javalin application where routes are registered.
+     * @param app Javalin application for route registration.
      */
     public void registerRoutes(Javalin app) {
 
         // CREATE -> new task
         /**
-         * POST /api/projects/{projectId}/tasks
-         *
-         * This endpoint will allow the creation of a new task within a project.
-         * We expect a JSON body with task details.
-         *
-         * Path Parameter:
-         * - {projectId} : ID of the project to which the task belongs.
-         *
-         * Example request body:
-         * {
-         *   "title": "Task Title",
-         *   "description": "Task Description",
-         *   "dueDate": "2023-11-05",
-         *   "isFinished": 0,
-         *   "isRepeating": 0,
-         *   "repeatDays": 0
-         * }
-         *
-         * On success, returns 201 Created and the new tasks details.
-         */
+        * POST /api/projects/{projectId}/tasks
+        *
+        * Creates a new task within a project. Expects a JSON body with task details.
+        *
+        * Path Parameter:
+        * - {projectId} : ID of the project to which the task belongs.
+        *
+        * Example request body:
+        * {
+        *   "title": "Task Title",
+        *   "description": "Task Description",
+        *   "dueDate": "2023-11-05",
+        *   "isFinished": 0,
+        *   "isRepeating": 0,
+        *   "repeatDays": 0
+        * }
+        * On success, returns 201 Created and the new task's details.
+        * */
         app.post("/api/projects/{projectId}/tasks", context -> {
             int projectId = Integer.parseInt(context.pathParam("projectId"));
-
             TaskDTO taskDTO = context.bodyAsClass(TaskDTO.class);
 
-            // ultimately we dont want tasks with empty names
-            if (taskDTO.getTitle() == null || taskDTO.getTitle().trim().isEmpty()) {
-                context.status(400).result("Task title cant be empty");
-                return;
-            }
-
-            Task task = new Task(
-                    taskDTO.getTitle(),
-                    taskDTO.getDescription(),
-                    taskDTO.getDueDate(),
-                    taskDTO.getIsFinished(),
-                    taskDTO.getIsRepeating(),
-                    taskDTO.getRepeatDays()
-            );
-
             try {
-                int taskId = localDatabase.saveTask(task, projectId);
-                task.setTaskID(taskId);
-                taskDTO.setTaskID(taskId);
-                context.status(201).json(taskDTO);
-            }
-            catch (Exception e) {
-                context.status(500).result("Error with a creating task");
+                TaskDTO createdTaskDTO = createTaskUseCase.execute(taskDTO, projectId);
+                context.status(201).json(createdTaskDTO);
+            } catch (Exception e) {
+                context.status(500).result("Error creating task");
             }
         });
 
         // READ -> Retrieve tasks by project ID
         /**
          * GET /api/projects/{projectId}/tasks
-         *
-         * Retrieves all tasks associated with a specific project ID.
-         *
-         * Path Parameter:
-         * - {projectId} : ID of the project whose tasks are to be retrieved.
-         *
-         * On success, returns the list of tasks as JSON.
-         * If the project has no tasks or does not exist return an empty list.
+         * Retrieves tasks for a specific project.
+         * Path Parameter: {projectId} - Project ID.
+         * Returns a list of tasks as JSON, or an empty list if no tasks exist.
          */
         app.get("/api/projects/{projectId}/tasks", context -> {
             int projectId = Integer.parseInt(context.pathParam("projectId"));
 
             try {
-                ArrayList<Task> tasks = localDatabase.loadTasks(projectId);
-
-                ArrayList<TaskDTO> taskDTOs = new ArrayList<>();
-                for (Task task : tasks) {
-                    TaskDTO taskDTO = new TaskDTO(
-                            task.getId(),
-                            task.getTitle(),
-                            task.getDescription(),
-                            task.getDueDate(),
-                            task.getIsFinished(),
-                            task.getIsRepeating(),
-                            task.getRepeatDays()
-                    );
-                    taskDTOs.add(taskDTO);
-                }
+                ArrayList<TaskDTO> taskDTOs = getTasksByProjectUseCase.execute(projectId);
                 context.json(taskDTOs);
             } catch (Exception e) {
-                context.status(500).result("Error with retrieving tasks");
+                context.status(500).result("Error retrieving tasks");
             }
         });
 
         // UPDATE -> existing task
         /**
-         * PUT /api/tasks/{id}
-         *
-         * Updates the details of an existing task by ID.
-         * Expects a JSON body with updated task details.
-         *
-         * Path Parameter:
-         * - {id} : ID of the task to update.
-         *
-         * On success, return 204.
-         * If an error occurs on update return server error.
-         */
+        * PUT /api/tasks/{id}
+        *
+        * Updates an existing task by ID with the data provided in the request body.
+        * Path Parameter:
+        * - {id} : ID of the task to update.
+        *
+        * Example request body:
+        * {
+        *   "title": "Updated Task Title",
+        *   "description": "Updated Task Description",
+        *   "dueDate": "2023-12-10",
+        *   "isFinished": 1,
+        *   "isRepeating": 0,
+        *   "repeatDays": 0
+        * }
+        * On success, returns 204 No Content. Returns 500 on server error.
+        */
         app.put("/api/tasks/{id}", context -> {
             int taskId = Integer.parseInt(context.pathParam("id"));
-
             TaskDTO taskDTO = context.bodyAsClass(TaskDTO.class);
 
-            // we dont want to allow empty names in tasks
-            if (taskDTO.getTitle() == null || taskDTO.getTitle().trim().isEmpty()) {
-                context.status(400).result("Task title cant be empty");
-                return;
-            }
-
-            Task task = new Task(
-                    taskId,
-                    taskDTO.getTitle(),
-                    taskDTO.getDescription(),
-                    taskDTO.getDueDate(),
-                    taskDTO.getIsFinished(),
-                    taskDTO.getIsRepeating(),
-                    taskDTO.getRepeatDays()
-            );
-
             try {
-                localDatabase.updateTask(task);
+                updateTaskUseCase.execute(taskId, taskDTO);
                 context.status(204);
             } catch (Exception e) {
-                context.status(500).result("Error with updating task");
+                context.status(500).result("Error updating task");
             }
         });
 
         // DELETE -> task by ID
         /**
          * DELETE /api/tasks/{id}
-         *
-         * Deletes a task from the database by its ID.
-         *
-         * Path Parameter:
-         * - {id} : ID of the task to delete.
-         *
-         * On success, returns 204 No Content.
-         * If an error occurs during deletion, returns 500 Internal Server Error.
+         * Deletes a task by ID.
+         * Path Parameter: {id} - Task ID.
+         * Returns 204 No Content on success or 500 for server error.
          */
         app.delete("/api/tasks/{id}", context -> {
             int taskId = Integer.parseInt(context.pathParam("id"));
 
             try {
-                localDatabase.deleteTask(taskId);
+                deleteTaskUseCase.execute(taskId);
                 context.status(204);
             } catch (Exception e) {
-                context.status(500).result("Error with deleting task");
+                context.status(500).result("Error deleting task");
             }
         });
     }

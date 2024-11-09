@@ -21,6 +21,13 @@ public class ProjectDTO {
     // data managment.
 
     /**
+     * Empty Constructor for Jackson. Which is required.
+     */
+    public ProjectDTO() {
+        this.taskDTOs = new ArrayList<>(); // we create an empty array
+    }
+
+    /**
      * Creates a ProjectDTO with all project details, including ID, title, description,
      * user ID, and a list of TaskDTO objects associated with the project.
      *

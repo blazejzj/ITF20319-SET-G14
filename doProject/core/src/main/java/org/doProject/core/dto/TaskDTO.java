@@ -1,5 +1,6 @@
 package org.doProject.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 
@@ -16,9 +17,13 @@ public class TaskDTO {
     private String description;
     private int isFinished;
     private int isRepeating;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
     private int repeatDays;
 
+    // Default constructor needed for Jackson deserialization
+    public TaskDTO() {}
 
     /**
      * Create a TaskDTO without an ID, useful when a task ID is not yet assigned.
