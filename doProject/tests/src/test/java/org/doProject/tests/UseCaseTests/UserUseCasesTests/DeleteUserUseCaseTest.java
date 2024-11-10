@@ -26,15 +26,12 @@ class DeleteUserUseCaseTest {
     @Test
     @DisplayName("Execute with valid user ID -> Delete user successfully")
     public void executeWithValidUserId() throws Exception {
-        // arrange
         int userId = 1;
         User user = new User(userId, "Massive Joe");
         when(userRepository.loadUser(userId)).thenReturn(user);
 
-        // act
         deleteUserUseCase.execute(userId);
 
-        //assert
         verify(userRepository, times(1)).loadUser(userId);
         verify(userRepository, times(1)).deleteUser(userId);
     }
@@ -42,11 +39,9 @@ class DeleteUserUseCaseTest {
     @Test
     @DisplayName("Execute with non-existing user ID -> Should throw Exception")
     public void executeWithNonExistingUserId() throws Exception {
-        // arrange
         int userId = 2;
         when(userRepository.loadUser(userId)).thenReturn(null);
 
-        // act and Assert
         Exception exception = assertThrows(Exception.class, () -> {
             deleteUserUseCase.execute(userId);
         });
@@ -59,11 +54,8 @@ class DeleteUserUseCaseTest {
     @Test
     @DisplayName("Execute with invalid user ID (negative ID) -> Should throw Exception")
     public void executeWithInvalidUserId() throws Exception {
-
-        // arrrange
         int userId = -1;
 
-        // act and asser
         Exception exception = assertThrows(Exception.class, () -> {
             deleteUserUseCase.execute(userId);
         });

@@ -27,14 +27,11 @@ class GetUserByIdUseCaseTest {
     @Test
     @DisplayName("Execute with valid user ID -> Retrieve user successfully")
     public void executeWithValidUserId() throws Exception {
-        // Arrange
         User user = new User(1, "Zoltan Pepper");
         when(userRepository.loadUser(1)).thenReturn(user);
 
-        // Act
         UserDTO result = getUserByIdUseCase.execute(1);
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.getId());
         assertEquals("Zoltan Pepper", result.getUserName());
@@ -44,10 +41,8 @@ class GetUserByIdUseCaseTest {
     @Test
     @DisplayName("Execute with non-existing user Id -> Should throw Exception")
     public void executeWithNonExistingUserId() throws Exception {
-        // Arrange
         when(userRepository.loadUser(2)).thenReturn(null);
 
-        // Act and Assert
         Exception exception = assertThrows(Exception.class, () -> {
             getUserByIdUseCase.execute(2);
         });
@@ -60,7 +55,6 @@ class GetUserByIdUseCaseTest {
     @DisplayName("Execute with invalid user ID (negative ID) -> Should throw Exception")
     public void executeWithInvalidUserId() throws Exception {
 
-        // act and asert
         Exception exception = assertThrows(Exception.class, () -> {
             getUserByIdUseCase.execute(-1);
         });

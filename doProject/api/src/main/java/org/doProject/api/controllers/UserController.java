@@ -14,10 +14,10 @@ import org.doProject.core.usecases.UpdateUserUseCase;
  * updating, and deleting users. Defines API routes for managing user data.
  *
  * Endpoints:
- * - POST /api/users      : Create a new user.
- * - GET /api/users/{id}  : Retrieve user details by ID.
- * - PUT /api/users/{id}  : Update an existing user.
- * - DELETE /api/users/{id}: Delete a user by ID.
+ * - POST /api/users        : Create a new user.
+ * - GET /api/users/{id}    : Retrieve user details by ID.
+ * - PUT /api/users/{id}    : Update an existing user.
+ * - DELETE /api/users/{id} : Delete a user by ID.
  */
 public class UserController {
 
@@ -53,11 +53,9 @@ public class UserController {
         * Expects a JSON body with user information.
         *
         * Example request body:
-        * ```json
         * {
-        *   "userName": "JohnDoe"
+        *   "userName": "Amy Stake"
         * }
-        * ```
         * On success, returns 201 Created with the new user's details.
         */
         app.post("/api/users", context -> {
@@ -97,17 +95,14 @@ public class UserController {
         * - {id} : ID of the user to update.
         *
         * Example request body:
-        * ```json
         * {
         *   "userName": "UpdatedUserName"
         * }
-        * ```
         * On success, returns 204 No Content. Returns 500 if an error occurs.
         */
         app.put("/api/users/{id}", context -> {
             int userId = Integer.parseInt(context.pathParam("id"));
             UserDTO userDTO = context.bodyAsClass(UserDTO.class);
-
             try {
                 updateUserUseCase.execute(userId, userDTO);
                 context.status(204);
@@ -126,7 +121,6 @@ public class UserController {
          */
         app.delete("/api/users/{id}", context -> {
             int userId = Integer.parseInt(context.pathParam("id"));
-
             try {
                 deleteUserUseCase.execute(userId);
                 context.status(204);

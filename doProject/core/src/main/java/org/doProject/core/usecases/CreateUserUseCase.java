@@ -34,7 +34,6 @@ public class CreateUserUseCase {
      * @throws Exception if an error occurs during creation or if the user name is empty.
      */
     public UserDTO execute(UserDTO userDTO) throws Exception {
-        System.out.println("Executing CreateUserUseCase with userDTO: " + userDTO.getUserName());
         if (userDTO.getUserName() == null || userDTO.getUserName().trim().isEmpty()) {
             throw new IllegalArgumentException("User name can't be empty");
         }
@@ -42,6 +41,7 @@ public class CreateUserUseCase {
         User user = new User(userDTO.getUserName());
         int userId = userRepository.saveUser(user);
         userDTO.setId(userId);
+
         return userDTO;
     }
 }

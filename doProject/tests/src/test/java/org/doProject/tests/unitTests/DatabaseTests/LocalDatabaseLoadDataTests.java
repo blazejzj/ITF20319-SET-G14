@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doReturn;
 
 public class LocalDatabaseLoadDataTests {
 
@@ -24,15 +23,13 @@ public class LocalDatabaseLoadDataTests {
     private Connection mockConnection;
     private PreparedStatement mockPreparedStatement;
     private ResultSet mockResultSet;
-    private LocalDate localDate;
 
     @BeforeEach
     public void setUp() throws SQLException {
 
         localDatabaseConnection = mock(LocalDatabaseConnection.class);
-        localDatabase = spy(new LocalDatabase(localDatabaseConnection)); // create a spy
+        localDatabase = spy(new LocalDatabase(localDatabaseConnection));
 
-        // Mock connection and prepared statementss
         mockConnection = mock(Connection.class);
         mockPreparedStatement = mock(PreparedStatement.class);
         mockResultSet = mock(ResultSet.class);
@@ -61,7 +58,6 @@ public class LocalDatabaseLoadDataTests {
         assertEquals("Blazej", user.getUserName());
     }
 
-    // We use real User here, because its a simple bulletproof class that only uses getters
     @Test
     @DisplayName("Read non-existing user from Database")
     public void testLoadNonExistingUser() throws SQLException {
@@ -79,12 +75,12 @@ public class LocalDatabaseLoadDataTests {
     @Test
     @DisplayName("Read existing projects for a user from Database")
     public void testLoadUsersExistingProjects() throws SQLException {
-        when(mockResultSet.next()).thenReturn(true, true, false); // first, second project, then no more
+        when(mockResultSet.next()).thenReturn(true, true, false);
 
-        when(mockResultSet.getInt("id")).thenReturn(1).thenReturn(2); // First return 1, then 2 for the second project
+        when(mockResultSet.getInt("id")).thenReturn(1).thenReturn(2);
         when(mockResultSet.getString("title")).thenReturn("Project 1").thenReturn("Project 2");
         when(mockResultSet.getString("description")).thenReturn("Description 1").thenReturn("Description 2");
-        when(mockResultSet.getInt("userID")).thenReturn(1); // Same user ID for both projects
+        when(mockResultSet.getInt("userID")).thenReturn(1);
 
         int userId = 1;
         var projects = localDatabase.loadUserProjects(userId);
@@ -104,14 +100,14 @@ public class LocalDatabaseLoadDataTests {
     @Test
     @DisplayName("Read non-existing projects for a user from Database")
     public void testLoadUsersNonExistingProjects() throws SQLException {
-        when(mockResultSet.next()).thenReturn(false); // no project available
+        when(mockResultSet.next()).thenReturn(false);
 
-        int userId = 999; // non existent user
+        int userId = 999;
         var projects = localDatabase.loadUserProjects(userId);
 
         verify(mockPreparedStatement).setInt(1, userId);
 
-        assertEquals(0, projects.size()); // expect no projects for this non existent user
+        assertEquals(0, projects.size());
     }
 
     // TASKS LOADING TESTS
@@ -138,7 +134,6 @@ public class LocalDatabaseLoadDataTests {
 
         assertEquals(2, tasks.size());
 
-        // first task
         assertEquals(1, tasks.get(0).getId());
         assertEquals("Task 1", tasks.get(0).getTitle());
         assertEquals("Description 1", tasks.get(0).getDescription());
@@ -147,7 +142,6 @@ public class LocalDatabaseLoadDataTests {
         assertEquals(0, tasks.get(0).getIsRepeating());
         assertEquals(0, tasks.get(0).getRepeatDays());
 
-        // second task
         assertEquals(2, tasks.get(1).getId());
         assertEquals("Task 2", tasks.get(1).getTitle());
         assertEquals("Description 2", tasks.get(1).getDescription());
@@ -160,7 +154,7 @@ public class LocalDatabaseLoadDataTests {
     @Test
     @DisplayName("Read non-existing tasks for a project from Database")
     public void testLoadNonExistingTasksForProject() throws SQLException {
-        when(mockResultSet.next()).thenReturn(false); // no tasks available
+        when(mockResultSet.next()).thenReturn(false);
 
         int projectId = 999; // were assuming this id doesnt have any tasks
         var tasks = localDatabase.loadTasks(projectId);

@@ -9,7 +9,6 @@ import java.time.LocalDate;
  */
 public class Task {
 
-    // Global Variables
     private int taskID;
     private String title;
     private String description;
@@ -17,7 +16,7 @@ public class Task {
     private int isRepeating;
     private LocalDate dueDate;
     private int repeatDays;
-//    private int priority; Priority could with later implementation be necessary.
+    // private int priority; Priority could with later implementation be necessary.
     // Priority would control the tasks priority, and display how important it is to
     // do this specific task. (1), (2), (3). Green, Orange, Red.
 

@@ -29,16 +29,13 @@ class UpdateTaskUseCaseTest {
     @Test
     @DisplayName("Execute with valid task ID and title -> Should update task successfully")
     public void executeWithValidTaskIdAndTitle() throws Exception {
-        // Arrange
         int taskId = 1;
         TaskDTO taskDTO = new TaskDTO(taskId, "Updated my title", "Updated some text here", LocalDate.now(), 0, 1, 7);
         Task existingTask = new Task(taskId, "Good ol' title", "Not good ol' description", LocalDate.now(), 0, 1, 7);
         when(taskRepository.getTaskById(taskId)).thenReturn(existingTask);
 
-        // Act
         updateTaskUseCase.execute(taskId, taskDTO);
 
-        // Assert
         verify(taskRepository, times(1)).getTaskById(taskId);
         verify(taskRepository, times(1)).updateTask(any(Task.class));
     }
@@ -46,11 +43,9 @@ class UpdateTaskUseCaseTest {
     @Test
     @DisplayName("Execute with empty task title -> Should throw Exception")
     public void executeWithEmptyTaskTitle() throws  Exception {
-        // Arrange
         int taskId = 1;
         TaskDTO taskDTO = new TaskDTO(taskId, "  ", "description", LocalDate.now(), 0, 1, 7);
 
-        // Act and Assert
         Exception exception = assertThrows(Exception.class, () -> {
             updateTaskUseCase.execute(taskId, taskDTO);
         });
@@ -62,12 +57,10 @@ class UpdateTaskUseCaseTest {
     @Test
     @DisplayName("Execute with non-existing task ID -> Should throw Exception")
     public void executeWithNonExistingTaskId() throws Exception {
-        // Arrange
         int taskId = 999;
         TaskDTO taskDTO = new TaskDTO("Updated Title", "Description", LocalDate.now(), 0, 1, 7);
         when(taskRepository.getTaskById(taskId)).thenReturn(null);
 
-        // Act and Assert
         Exception exception = assertThrows(Exception.class, () -> {
             updateTaskUseCase.execute(taskId, taskDTO);
         });

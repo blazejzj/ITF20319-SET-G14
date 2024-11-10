@@ -27,27 +27,19 @@ class UpdateUserUseCaseTest {
     @Test
     @DisplayName("Execute with valid user ID and name -> Update user successfully")
     public void executeWithValidUserIdAndName() throws Exception {
-        // Arrange
         int userId = 1;
         UserDTO userDTO = new UserDTO(userId, "Barb Dwyer");
         User existingUser = new User(userId, "Mike Rotch");
 
         when(userRepository.loadUser(userId)).thenReturn(existingUser);
 
-        // Act
         updateUserUseCase.execute(userId, userDTO);
 
-        // Assert
         verify(userRepository, times(1)).loadUser(userId);
 
-        // ArgumentCaptor literally allows us to "capture" an argument thats passed to a method
-        // so we can inspect it. Useful when we cant access argument outside of teh method
-        // we'd like to test.
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository, times(1)).updateUser(userCaptor.capture());
 
-        // Assert
-        // -> that the captured user has the updated name and correct Id
         User capturedUser = userCaptor.getValue();
         assertEquals(userId, capturedUser.getId());
         assertEquals("Barb Dwyer", capturedUser.getUserName());
@@ -56,14 +48,11 @@ class UpdateUserUseCaseTest {
     @Test
     @DisplayName("Execute with non-existing user ID -> Should throw Exception")
     public void executeWithNonExistingUserId() throws Exception {
-
-        // Arrange
         int userId = 2;
         UserDTO userDTO = new UserDTO(userId, "Hai Howie Yu");
 
         when(userRepository.loadUser(userId)).thenReturn(null);
 
-        // Act and Assert
         Exception exception = assertThrows(Exception.class, () -> {
             updateUserUseCase.execute(userId, userDTO);
         });
@@ -76,12 +65,10 @@ class UpdateUserUseCaseTest {
     @Test
     @DisplayName("Execute with empty user name -> Should throw IllegalArgumentException")
     public void executeWithEmptyUserName() throws Exception {
-        // Arrange
         int userId = 1;
-        // simulate "empty" name
+
         UserDTO userDTO = new UserDTO(userId, "  ");
 
-        // Act and Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             updateUserUseCase.execute(userId, userDTO);
         });

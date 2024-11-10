@@ -1,12 +1,10 @@
-// src/main/java/org/doProject/core/usecases/DeleteUserUseCase.java
 package org.doProject.core.usecases;
-
 
 import org.doProject.core.domain.User;
 import org.doProject.core.port.UserRepository;
 
 /**
- * Delettes a user by their ID, ensuring the user exists before deletion.
+ * Deletes a user by their ID, ensuring the user exists before deletion.
  *
  * Throws an exception if the user is not found.
  */
@@ -30,7 +28,6 @@ public class DeleteUserUseCase {
      * @throws Exception if the user is not found or if an error occurs during deletion.
      */
     public void execute(int userId) throws Exception {
-
         if (userId < 0) {
             throw new Exception("Invalid user id");
         }
@@ -40,7 +37,6 @@ public class DeleteUserUseCase {
         if (existingUser == null) {
             throw new Exception("User not found");
         }
-
         userRepository.deleteUser(userId);
     }
 }

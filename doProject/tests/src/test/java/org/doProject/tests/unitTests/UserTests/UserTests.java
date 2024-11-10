@@ -29,49 +29,38 @@ public class UserTests {
     @Test
     @DisplayName("Add project to user")
     public void testAddProject() {
-        // Act
         user.addProject(project);
 
-        // Assert
         Assertions.assertTrue(user.getProjects().contains(project));
     }
 
     @Test
     @DisplayName("Remove a project from user")
     public void testRemoveProject() {
-        // Arrange
         user.addProject(project);
 
-        // Act
         user.removeProject(project);
 
-        // Assert
         Assertions.assertFalse(user.getProjects().contains(project));
     }
 
     @Test
     @DisplayName("Remove all projects from user")
     public void testRemoveAllProjects() {
-        // Arrange
         user.addProject(project);
 
-        // Act
         user.removeAllProjects();
 
-        // Assert
         Assertions.assertTrue(user.getProjects().isEmpty());
     }
 
     @Test
     @DisplayName("Remove project by ID")
     public void testRemoveProjectById() {
-        // Arrange
         user.addProject(project);
 
-        // Act
         user.removeProjectById(1);
 
-        // Assert
         Assertions.assertFalse(user.getProjects().contains(project));
     }
 }

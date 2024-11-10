@@ -27,24 +27,19 @@ class DeleteProjectUseCaseTest {
     @Test
     @DisplayName("Execute with valid project ID -> Deletes project successfully")
     public void executeWithValidProjectId() throws Exception {
-        // Arrange
         int projectId = 420;
 
-        // Act
         deleteProjectUseCase.execute(projectId);
 
-        // Assert
         verify(projectRepository, times(1)).deleteProject(projectId);
     }
 
     @Test
     @DisplayName("Execute with non-existing project ID -> Should throw SQLException")
     public void executeWithNonExistingProjectId() throws Exception {
-        // Arrange
         int projectId = 999;
         doThrow(new SQLException("Project not found")).when(projectRepository).deleteProject(projectId);
 
-        // Act and Assert
         SQLException exception = assertThrows(SQLException.class, () -> {
             deleteProjectUseCase.execute(projectId);
         });

@@ -9,13 +9,11 @@ import java.util.ArrayList;
  */
 public class User {
 
-    // Instance variables
     private int id;
     private String userName;
     private ArrayList<Project> projects = new ArrayList<>();
 
     //Constructors
-
     /**
      * Constructs a User with a specified username.
      * ID is not assigned in this constructor and may be set later.

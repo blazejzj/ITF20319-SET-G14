@@ -30,9 +30,8 @@ class GetTasksByProjectUseCaseTest {
     }
 
     @Test
-    @DisplayName("Execute with valid project ID -> Gerts tasks successfully")
+    @DisplayName("Execute with valid project ID -> Gets tasks successfully")
     public void executeWithValidProjectId() throws Exception {
-        // Arrange
         int projectId = 1;
         List<Task> tasks = Arrays.asList(
                 new Task(1, "Task 1", "Description 1", LocalDate.now(), 0, 1, 7),
@@ -40,10 +39,8 @@ class GetTasksByProjectUseCaseTest {
         );
         when(taskRepository.loadTasks(projectId)).thenReturn(new ArrayList<>(tasks));
 
-        // Act
         List<TaskDTO> result = getTasksByProjectUseCase.execute(projectId);
 
-        // Assert
         assertEquals(2, result.size());
         assertEquals("Task 1", result.get(0).getTitle());
         assertEquals("Task 2", result.get(1).getTitle());
@@ -53,14 +50,11 @@ class GetTasksByProjectUseCaseTest {
     @Test
     @DisplayName("Execute with project ID that has no tasks -> Should return empty list")
     public void executeWithProjectIdHavingNoTasks() throws Exception {
-        // Arrange
         int projectId = 1;
         when(taskRepository.loadTasks(projectId)).thenReturn(new ArrayList<>());
 
-        // Act
         List<TaskDTO> result = getTasksByProjectUseCase.execute(projectId);
 
-        // Assert
         assertTrue(result.isEmpty());
         verify(taskRepository, times(1)).loadTasks(projectId);
     }

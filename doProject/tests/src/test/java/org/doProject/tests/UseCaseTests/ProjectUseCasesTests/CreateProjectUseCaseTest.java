@@ -27,16 +27,13 @@ class CreateProjectUseCaseTest {
     @Test
     @DisplayName("Execute with valid project title -> Creates project successfully")
     public void executeWithValidProjectTitle() throws Exception {
-        // Arrange
         ProjectDTO projectDTO = new ProjectDTO("New Project", "Fun Description", 1);
         int userId = 1;
         int projectId = 123;
         when(projectRepository.saveProject(any(Project.class))).thenReturn(projectId);
 
-        // Act
         ProjectDTO result = createProjectUseCase.execute(projectDTO, userId);
 
-        // 3 asserts
         assertNotNull(result);
         assertEquals(projectId, result.getId());
         verify(projectRepository, times(1)).saveProject(any(Project.class));
@@ -45,11 +42,9 @@ class CreateProjectUseCaseTest {
     @Test
     @DisplayName("Execute with empty project title -> Should throw IllegalArgumentException")
     public void executeWithEmptyProjectTitle() throws Exception {
-        // Arrange
         ProjectDTO projectDTO = new ProjectDTO("  ", "Project Descriptionne", 1);
         int userId = 1;
 
-        // Act and Asserts
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             createProjectUseCase.execute(projectDTO, userId);
         });

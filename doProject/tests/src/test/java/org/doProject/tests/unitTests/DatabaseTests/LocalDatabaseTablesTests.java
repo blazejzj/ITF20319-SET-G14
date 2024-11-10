@@ -24,15 +24,12 @@ public class LocalDatabaseTablesTests {
 
     @BeforeEach
     public void setUp() throws SQLException {
-        // Spy on db instance
         localDatabaseConnection = mock(LocalDatabaseConnection.class);
         localDatabase = spy(new LocalDatabase(localDatabaseConnection));
 
-        // mock the connection and statemnt objects from SQL
         mockConnection = mock(Connection.class);
         mockStatement = mock(Statement.class);
 
-        // return mocks
         when(mockConnection.createStatement()).thenReturn(mockStatement);
         doReturn(mockConnection).when(localDatabaseConnection).connect();
     }
@@ -67,7 +64,6 @@ public class LocalDatabaseTablesTests {
     public void testTasksTableAllColumnsExist() throws SQLException {
         localDatabase.createTables();
 
-        // verify the columns are there
         verify(mockStatement).execute(
                 "CREATE TABLE IF NOT EXISTS Tasks (" +
                         "id INTEGER PRIMARY KEY, " +
@@ -76,7 +72,7 @@ public class LocalDatabaseTablesTests {
                         "dueDate DATE, " +
                         "isFinished INTEGER, " +
                         "isRepeating INTEGER, " +
-                        "repeatDays INTEGER, " + // every x amount of days the task is going to be repeating
+                        "repeatDays INTEGER, " +
                         "project_id INTEGER, " +
                         "FOREIGN KEY (project_id) REFERENCES Projects(id))"
         );
@@ -86,8 +82,6 @@ public class LocalDatabaseTablesTests {
     @DisplayName("User table has all the necessary columns")
     public void testUserTableAllColumnsExist() throws SQLException {
         localDatabase.createTables();
-
-        // veruify the columns are there
         verify(mockStatement).execute(
             "CREATE TABLE IF NOT EXISTS Users (" +
                     "id INTEGER PRIMARY KEY, " +

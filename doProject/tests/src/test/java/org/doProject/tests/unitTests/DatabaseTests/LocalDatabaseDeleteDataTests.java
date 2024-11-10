@@ -38,7 +38,6 @@ public class LocalDatabaseDeleteDataTests {
         mockDeleteProjectStmt = mock(PreparedStatement.class);
         mockDeleteTaskStmt = mock(PreparedStatement.class);
 
-        // prepping some statements before hand and setting "default" behaviuor
         when(mockConnection.prepareStatement("DELETE FROM Users WHERE id = ?")).thenReturn(mockDeleteUserStmt);
         when(mockConnection.prepareStatement("DELETE FROM Projects WHERE userID = ?")).thenReturn(mockDeleteProjectsStmt);
         when(mockConnection.prepareStatement("DELETE FROM Tasks WHERE project_id IN (SELECT id FROM Projects WHERE userID = ?)")).thenReturn(mockDeleteTasksStmt);
@@ -99,16 +98,14 @@ public class LocalDatabaseDeleteDataTests {
     @Test
     @DisplayName("Delete an existing project from the database and its tasks")
     public void testDeleteExistingProjectAndItsTasks() throws SQLException {
-        // assume id projetc
         int id = 1;
 
         when(mockDeleteProjectStmt.executeUpdate()).thenReturn(1);
         when(mockDeleteTasksStmt.executeUpdate()).thenReturn(2);
 
-        // delete this project
         localDatabase.deleteProject(id);
 
-        // verify the quereis has been executed
+        // verify the queries has been executed
         // We can't forget that the deletion of project also should delete all tasks that
         // are inside this specific project
         verify(mockDeleteTasksStmt).setInt(1, id);
@@ -143,10 +140,8 @@ public class LocalDatabaseDeleteDataTests {
 
         when(mockDeleteTaskStmt.executeUpdate()).thenReturn(1);
 
-        // delete this task
         localDatabase.deleteTask(id);
 
-        // verify the query has been exectued
         verify(mockDeleteTaskStmt).setInt(1, id);
         verify(mockDeleteTaskStmt).executeUpdate();
     }
@@ -163,7 +158,4 @@ public class LocalDatabaseDeleteDataTests {
         verify(mockDeleteTaskStmt).setInt(1, taskId);
         verify(mockDeleteTaskStmt).executeUpdate();
     }
-
-
-
 }

@@ -29,16 +29,14 @@ class CreateTaskUseCaseTest {
     @Test
     @DisplayName("Execute with valid task title -> Creates task successfully")
     public void executeWithValidTaskTitle() throws Exception {
-        // Arrange
         TaskDTO taskDTO = new TaskDTO("Task tittleninio", "I do indeed like Sushi m8", LocalDate.now(), 0, 0, 0);
         int projectId = 1;
         int taskId = 111111;
+
         when(taskRepository.saveTask(any(Task.class), eq(projectId))).thenReturn(taskId);
 
-        // Act
         TaskDTO result = createTaskUseCase.execute(taskDTO, projectId);
 
-        // Assert
         assertNotNull(result);
         assertEquals(taskId, result.getTaskID());
         verify(taskRepository, times(1)).saveTask(any(Task.class), eq(projectId));
@@ -47,11 +45,9 @@ class CreateTaskUseCaseTest {
     @Test
     @DisplayName("Execute with empty task title -> Should throw Exception")
     public void executeWithEmptyTaskTitle() throws Exception {
-        // Arrange
         TaskDTO taskDTO = new TaskDTO("  ", "Description", LocalDate.now(), 0, 0, 0);
         int projectId = 1;
 
-        // Act and Assert
         Exception exception = assertThrows(Exception.class, () -> {
             createTaskUseCase.execute(taskDTO, projectId);
         });

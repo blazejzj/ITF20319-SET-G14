@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * This class contains methods to manage tasks connected to a project.
  */
 public class Project {
-    // Variables
+
     private int projectID;
     private String projectTitle;
     private String projectDescription;

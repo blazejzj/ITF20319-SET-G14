@@ -1,6 +1,5 @@
 package org.doProject.tests.unitTests.DatabaseTests;
 
-import org.doProject.infrastructure.domain.LocalDatabase;
 import org.doProject.infrastructure.domain.LocalDatabaseConnection;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import static org.mockito.Mockito.spy;
 
 public class LocalDatabaseConnectionTest {
 
-    // create a spy on DB
     LocalDatabaseConnection localDatabaseConnection = spy(new LocalDatabaseConnection("test.db"));
 
     @Test

@@ -92,10 +92,8 @@ public class ProjectController {
          * If the project is not found or validation fails, returns an appropriate error response.
          * If an error occurs during update, returns 500 Internal Server Error.
          */
-
         app.get("/api/users/{userId}/projects", context -> {
             int userId = Integer.parseInt(context.pathParam("userId"));
-
             try {
                 ArrayList<ProjectDTO> projectDTOs = getProjectsByUserUseCase.execute(userId);
                 context.json(projectDTOs);
@@ -122,7 +120,6 @@ public class ProjectController {
         app.put("/api/projects/{id}", context -> {
             int projectId = Integer.parseInt(context.pathParam("id"));
             ProjectDTO projectDTO = context.bodyAsClass(ProjectDTO.class);
-
             try {
                 updateProjectUseCase.execute(projectId, projectDTO);
                 context.status(204);
@@ -136,9 +133,6 @@ public class ProjectController {
                 context.status(500).result("Error updating project");
             }
         });
-
-
-
         // DELETE -> a project by ID
         /**
          * DELETE /api/projects/{id}
@@ -153,7 +147,6 @@ public class ProjectController {
          */
         app.delete("/api/projects/{id}", context -> {
             int projectId = Integer.parseInt(context.pathParam("id"));
-
             try {
                 deleteProjectUseCase.execute(projectId);
                 context.status(204);

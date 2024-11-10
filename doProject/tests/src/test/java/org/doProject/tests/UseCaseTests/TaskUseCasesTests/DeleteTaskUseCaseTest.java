@@ -27,24 +27,20 @@ class DeleteTaskUseCaseTest {
     @Test
     @DisplayName("Execute with valid task ID -> Deletes task successfully")
     public void executeWithValidTaskId() throws Exception {
-        // Arrange
         int taskId = 123123;
 
-        // Act
         deleteTaskUseCase.execute(taskId);
 
-        // Assert
         verify(taskRepository, times(1)).deleteTask(taskId);
     }
 
     @Test
     @DisplayName("Execute with non-existing task ID -> Should throw SQLException")
     public void executeWithNonExistingTaskId() throws Exception {
-        // Arrange
         int taskId = 11223344;
+
         doThrow(new SQLException("Task not found")).when(taskRepository).deleteTask(taskId);
 
-        // Act and Assert
         SQLException exception = assertThrows(SQLException.class, () -> {
             deleteTaskUseCase.execute(taskId);
         });

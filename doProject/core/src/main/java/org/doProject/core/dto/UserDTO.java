@@ -14,7 +14,7 @@ public class UserDTO {
     private String userName;
     private ArrayList<ProjectDTO> projectDTOs;
     // For future reference, the list of ProjectDTO's could for example be refactored
-    // to just hold the project IDs for simple data managment.
+    // to just hold the project IDs for simple data management.
 
     /**
      * Default constructor for Jackson

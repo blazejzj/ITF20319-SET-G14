@@ -21,7 +21,6 @@ class GetProjectsByUserUseCaseTest {
 
     @Mock
     private ProjectRepository projectRepository;
-
     @Mock
     private GetTasksByProjectUseCase getTasksByProjectUseCase;
 
@@ -36,7 +35,6 @@ class GetProjectsByUserUseCaseTest {
     @Test
     @DisplayName("Execute with valid user ID -> Gets projects successfully")
     public void executeWithValidUserId() throws Exception {
-        // Arrange
         int userId = 1;
         List<Project> projects = Arrays.asList(
                 new Project(1, "Title 1", "Description 1", userId),
@@ -44,10 +42,8 @@ class GetProjectsByUserUseCaseTest {
         );
         when(projectRepository.loadUserProjects(userId)).thenReturn(new ArrayList<>(projects));
 
-        // Act
         List<ProjectDTO> result = getProjectsByUserUseCase.execute(userId);
 
-        // Assert
         assertEquals(2, result.size());
         assertEquals("Title 1", result.get(0).getTitle());
         assertEquals("Title 2", result.get(1).getTitle());
@@ -57,14 +53,11 @@ class GetProjectsByUserUseCaseTest {
     @Test
     @DisplayName("Execute with user ID that has no projects -> Should return empty list")
     public void executeWithUserIdHavingNoProjects() throws Exception {
-        // Arrange
         int userId = 1;
         when(projectRepository.loadUserProjects(userId)).thenReturn(new ArrayList<>());
 
-        // Act
         List<ProjectDTO> result = getProjectsByUserUseCase.execute(userId);
 
-        // Assert
         assertTrue(result.isEmpty());
         verify(projectRepository, times(1)).loadUserProjects(userId);
     }

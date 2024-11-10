@@ -1,6 +1,5 @@
 package org.doProject.core.usecases;
 
-
 import org.doProject.core.domain.Task;
 import org.doProject.core.dto.TaskDTO;
 import org.doProject.core.port.TaskRepository;

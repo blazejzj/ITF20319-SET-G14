@@ -32,7 +32,7 @@ public class LocalDatabaseUpdateDataTests {
         mockPreparedStatement = mock(PreparedStatement.class);
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeUpdate()).thenReturn(1); // expect atleast 1 row to be affected
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
 
         doReturn(mockConnection).when(localDatabaseConnection).connect();
     }
@@ -44,10 +44,8 @@ public class LocalDatabaseUpdateDataTests {
         int id = 1;
         String newName = "Amy Stake"; // pun intended
 
-        // execute the query
         localDatabase.updateUser(id, newName);
 
-        // verify query has been executed
         verify(mockConnection).prepareStatement("UPDATE Users SET name = ? WHERE id = ?");
         verify(mockPreparedStatement).setString(1, newName);
         verify(mockPreparedStatement).setInt(2, id);
@@ -58,14 +56,11 @@ public class LocalDatabaseUpdateDataTests {
     @DisplayName("Update an non-existing user name")
     public void testUpdateNonExistingUser() throws SQLException {
         int id = 111111;
-        String newName = "Amy Stake"; // pun intended
+        String newName = "Amy Stake";
 
-        // mock the executeUpdate to return 0
         when(mockPreparedStatement.executeUpdate()).thenReturn(0);
 
         assertThrows(SQLException.class, () -> localDatabase.updateUser(id, newName));
-
-        // verify query has been executed
         verify(mockConnection).prepareStatement("UPDATE Users SET name = ? WHERE id = ?");
         verify(mockPreparedStatement).setString(1, newName);
         verify(mockPreparedStatement).setInt(2, id);
@@ -92,11 +87,10 @@ public class LocalDatabaseUpdateDataTests {
     @Test
     @DisplayName("Attempt to update a non-existing project")
     public void testUpdateNonExistingProject() throws SQLException {
-        int projectId = 999; // Assume this project does not exist
+        int projectId = 999;
         String newTitle = "Updated Project Title";
         String newDescription = "Updated Project Description";
 
-        // mock to return 0
         when(mockPreparedStatement.executeUpdate()).thenReturn(0);
 
         assertThrows(SQLException.class, () -> localDatabase.updateProject(projectId, newTitle, newDescription));
@@ -148,7 +142,6 @@ public class LocalDatabaseUpdateDataTests {
         int isRepeating = 0;
         int repeatDays = 0;
 
-        // mock to retrun 0
         when(mockPreparedStatement.executeUpdate()).thenReturn(0);
 
         assertThrows(SQLException.class, () -> localDatabase.updateTask(taskId, newTitle, newDescription, newDueDate, isFinished, isRepeating, repeatDays));
@@ -163,6 +156,4 @@ public class LocalDatabaseUpdateDataTests {
         verify(mockPreparedStatement).setInt(7, taskId);
         verify(mockPreparedStatement).executeUpdate();
     }
-
-
 }

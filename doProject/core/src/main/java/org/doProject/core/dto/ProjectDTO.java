@@ -18,7 +18,7 @@ public class ProjectDTO {
     private ArrayList<TaskDTO> taskDTOs;
     // For future reference, the arraylist could hold simple taskIDs instead of whole DTO
     // objects. This is yet to be decided. It could be beneficial later, for easier
-    // data managment.
+    // data management.
 
     /**
      * Empty Constructor for Jackson. Which is required.
