@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class User {
+    - int id
+    - String userName
+    }
+
+User --> Project : manages
+
+class Project {
+    - int projectID
+    - String projectTitle
+    - String projectDescription
+    - ArrayList<Task> tasks
+    - int userID
+    + Project (int projectID, String projectTitle, String projectDescription, int userID)
+    + Project (String projectTitle, String projectDescription, int userID)
+    }
+
+Project --o Task : contains
+
+class Task {
+    - int taskID
+    - String title
+    - String description
+    - int isFinished
+    - int isRepeating
+    - LocalDate dueDate
+    - int repeatDays
+    + Task (String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays)
+    + Task (int id, String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays)
+    }
+
+class LocalDatabase {
+    + void addUser (User user)
+    + void addProject (Project project)
+    + void addTask (Task task)
+    + void removeUser (int userId)
+    + void removeProject (int projectId)
+    + void removeTask (int taskId)
+    }
+
+LocalDatabase --> User : manages
+LocalDatabase --> Project : manages
+LocalDatabase --> Task : manages
+@enduml

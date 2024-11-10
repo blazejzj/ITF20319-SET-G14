@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+[*] --> Initialized
+
+Initialized --> ProjectAdded : addProject(Project project)
+
+ProjectAdded --> ProjectRemoved : removeProject(Project project)
+
+ProjectAdded --> ProjectRemoved : removeProjectById(int projectId)
+
+ProjectRemoved --> ProjectAdded : addProject(Project project)
+
+ProjectAdded --> ProjectIsEmpty : removeAllProjects()
+
+ProjectRemoved --> ProjectIsEmpty : removeAllProjects()
+
+ProjectIsEmpty --> ProjectAdded : addProject(Project project)
+@enduml
