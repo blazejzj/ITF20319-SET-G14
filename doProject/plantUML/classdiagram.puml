@@ -6,7 +6,7 @@ abstract class User {
     - String userName
     }
 
-User --> Project : manages
+User --> Project : contains
 
 class Project {
     - int projectID
