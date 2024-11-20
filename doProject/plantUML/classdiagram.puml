@@ -4,9 +4,10 @@
 abstract class User {
     - int id
     - String userName
+    - ArrayList<Project> projects
     }
 
-User --> Project : contains
+User --o Project : contains
 
 class Project {
     - int projectID
@@ -32,6 +33,8 @@ class Task {
     + Task (int id, String title, String description, LocalDate dueDate, int isFinished, int isRepeating, int repeatDays)
     }
 
+
+' Due too the high amount of variables, we have chosen not to include them.
 class LocalDatabase {
     + void addUser (User user)
     + void addProject (Project project)
